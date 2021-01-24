@@ -100,8 +100,6 @@ public class Drivetrain extends SubsystemBase {
     public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
-        
-        // TODO: reset pose here?
     }
 
     public int getRawLeftEncoder() {
@@ -154,12 +152,20 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.reset();
-        // TODO: reset pose here?
     }
 
     /**********************
      * ODOMETER FUNCTIONS *
      **********************/
+
+    public void reset() {
+        resetEncoders();
+        resetGyro();
+        odometry.resetPosition(
+            new Pose2d(), 
+            new Rotation2d()
+        );
+    }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
@@ -172,7 +178,7 @@ public class Drivetrain extends SubsystemBase {
         // return a negated value IF gyro returns positive value
         // as the robot turns clockwise
         return new Rotation2d(
-            -this.getAngleY().toRadians()
+            -this.getAngleZ().toRadians()
         );
     }
 
