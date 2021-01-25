@@ -138,15 +138,15 @@ public class Drivetrain extends SubsystemBase {
      * GYRO FUNCTIONS *
      ******************/
 
-    public Angle getAngleX() {
+    public Angle getAngleRoll() {
         return Angle.fromDegrees(gyro.getAngleX());
     }
 
-    public Angle getAngleY() {
+    public Angle getAnglePitch() {
         return Angle.fromDegrees(gyro.getAngleY());
     }
 
-    public Angle getAngleZ() {
+    public Angle getAngleYaw() {
         return Angle.fromDegrees(gyro.getAngleZ());
     }
 
@@ -178,7 +178,7 @@ public class Drivetrain extends SubsystemBase {
         // return a negated value IF gyro returns positive value
         // as the robot turns clockwise
         return new Rotation2d(
-            -this.getAngleZ().toRadians()
+            -this.getAngleYaw().toRadians()
         );
     }
 
