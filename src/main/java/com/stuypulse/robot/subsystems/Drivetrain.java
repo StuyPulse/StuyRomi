@@ -42,15 +42,13 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
 
-        // Gyro
-        gyro = new RomiGyro();
-        resetGyro();
-
         // Setup motors and drivetrain
         leftMotor = new Spark(Ports.LEFT_MOTOR);
         rightMotor = new Spark(Ports.RIGHT_MOTOR);
 
         drivetrain = new DifferentialDrive(leftMotor, rightMotor);
+
+        drivetrain.setDeadband(DEAD_BAND);
 
         // Setup encoders
         leftEncoder = new Encoder(Ports.LEFT_ENCODER_A, Ports.LEFT_ENCODER_B);
@@ -61,77 +59,73 @@ public class Drivetrain extends SubsystemBase {
 
         resetEncoders();
 
+        // Gyro
+        gyro = new RomiGyro();
+        resetGyro();
+
         // Odemetery
-
-        odometry = new DifferentialDriveOdometry(
-            this.getRotation2d(), 
-            new Pose2d(Odometry.START_X, Odometry.START_Y, new Rotation2d())
-        );
-
+        odometry = new DifferentialDriveOdometry(Odometry.START_ANG, Odometry.START);
         kinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
     }
 
-    /*********************
-     * DRIVING FUNCTIONS *
-     *********************/
-
-    public void tankDrive(double leftSpeed, double rightSpeed) {
-        drivetrain.tankDrive(leftSpeed, rightSpeed);
-    }
-
-    public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
-        drivetrain.arcadeDrive(xaxisSpeed, zaxisRotate);
-    }
-
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        leftMotor.setVoltage(leftVolts);
-        rightMotor.setVoltage(rightVolts);
-        drivetrain.feed();
-    }
-
-    public void stop() {
-        tankDriveVolts(0, 0);
-    }
 
     /*********************
      * ENCODER FUNCTIONS *
      *********************/
 
-    public void resetEncoders() {
-        leftEncoder.reset();
-        rightEncoder.reset();
-    }
-
+    /** Left Side **/
+    // Get raw encoder count of the left encoder
     public int getRawLeftEncoder() {
         return leftEncoder.get();
     }
 
-    public int getRawRightEncoder() {
-        return rightEncoder.get();
-    }
-
+    // The distance in meters that the wheel has traveled
     public double getLeftDistance() {
         return leftEncoder.getDistance();
     }
 
-    public double getRightDistance() {
-        return rightEncoder.getDistance();
-    }
-
+    // The current speed of the left wheel in meters / sec
     public double getLeftVelocity() {
         return leftEncoder.getRate();
     }
 
+    /** Right Side **/
+    // Get raw encoder count of the left encoder
+    public int getRawRightEncoder() {
+        return rightEncoder.get();
+    }
+
+    // The distance in meters that the wheel has traveled
+    public double getRightDistance() {
+        return rightEncoder.getDistance();
+    }
+
+    // The current speed of the left wheel in meters / sec
     public double getRightVelocity() {
         return rightEncoder.getRate();
     }
 
+    /** Both Sides **/
+    // Current distance in meters that the robot has traveled
+    public double getDistance() {
+        return (getLeftDistance() + getRightDistance()) / 2.0;
+    }
+
+    // The current speed of the robot in meters / sec
     public double getVelocity() {
         return (getLeftVelocity() + getRightVelocity()) / 2.0;
     }
 
-    public double getDistance() {
-        return (getLeftDistance() + getRightDistance()) / 2.0;
+    // Angle of the robot based on the difference in encoder values
+    public Angle getEncoderAngle() {
+        double diffMeters = getLeftDistance() - getRightDistance();
+        return Angle.fromRadians(diffMeters / TRACK_WIDTH);
+    }
+
+    /** Reset **/
+    private void resetEncoders() {
+        leftEncoder.reset();
+        rightEncoder.reset();
     }
 
     /******************
@@ -150,22 +144,21 @@ public class Drivetrain extends SubsystemBase {
         return Angle.fromDegrees(gyro.getAngleZ());
     }
 
-    public void resetGyro() {
+    public Angle getAngle() {
+        if(USE_GYROSCOPE.get()) {
+            return getAngleYaw();
+        } else {
+            return getEncoderAngle();
+        }
+    }
+
+    private void resetGyro() {
         gyro.reset();
     }
 
     /**********************
      * ODOMETER FUNCTIONS *
      **********************/
-
-    public void reset() {
-        resetEncoders();
-        resetGyro();
-        odometry.resetPosition(
-            new Pose2d(), 
-            new Rotation2d()
-        );
-    }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
@@ -175,30 +168,64 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Rotation2d getRotation2d() {
-        // return a negated value IF gyro returns positive value
-        // as the robot turns clockwise
         return new Rotation2d(
-            -this.getAngleYaw().toRadians()
+            -this.getAngle().toRadians()
         );
-    }
-
-    public DifferentialDriveKinematics getKinematics() {
-        return kinematics;
     }
 
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
 
+    public DifferentialDriveKinematics getKinematics() {
+        return kinematics;
+    }
+
     @Override
     public void periodic() {
-        
         odometry.update(
             this.getRotation2d(),
             this.getLeftDistance(),
             this.getRightDistance()
         );
+    }
 
+    private void resetOdometer() {
+        odometry.resetPosition(Odometry.START, Odometry.START_ANG);
+    }
+
+    // Resets all encoders / gyroscopes to 0
+    public void reset() {
+        resetEncoders();
+        resetGyro();
+        resetOdometer();
+    }
+
+
+    /*********************
+     * DRIVING FUNCTIONS *
+     *********************/
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        drivetrain.tankDrive(leftSpeed, rightSpeed, false);
+    }
+
+    public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
+        drivetrain.arcadeDrive(xaxisSpeed, zaxisRotate, false);
+    }
+
+    public void curvatureDrive(double xaxisSpeed, double zaxisRotate, boolean isQuickTurn) {
+        drivetrain.curvatureDrive(xaxisSpeed, zaxisRotate, isQuickTurn);
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        leftMotor.setVoltage(leftVolts);
+        rightMotor.setVoltage(rightVolts);
+        drivetrain.feed();
+    }
+
+    public void stop() {
+        drivetrain.stopMotor();
     }
 
 }

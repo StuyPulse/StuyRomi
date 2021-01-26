@@ -111,10 +111,8 @@ public class RomiGyro {
 
     /** Reset the gyro angles to 0. */
     public void reset() {
-        if (simAngleX != null) {
-            angleXOffset = simAngleX.get();
-            angleYOffset = simAngleY.get();
-            angleZOffset = simAngleZ.get();
-        }
+        if (simAngleX != null) angleXOffset = simAngleX.get();
+        if (simAngleY != null) angleYOffset = simAngleY.get();
+        if (simAngleZ != null) angleZOffset = simAngleZ.get();
     }
 }

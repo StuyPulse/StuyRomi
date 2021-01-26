@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.stuypulse.robot.subsystems.Drivetrain;
 
 import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.streams.filters.*;
 
 /**
@@ -18,8 +19,8 @@ public class DrivetrainDriveCommand extends CommandBase {
 
     // These filters help smooth out driving
     // But they are also optional
-    private IFilter speedFilter = new LowPassFilter(0.1);
-    private IFilter turnFilter = new LowPassFilter(0.0);
+    private IFilter speedFilter = new LowPassFilter(0.3);
+    private IFilter turnFilter = new LowPassFilter(0.2);
 
     public DrivetrainDriveCommand(Drivetrain subsystem, Gamepad gamepad) {
         drivetrain = subsystem;
@@ -28,11 +29,6 @@ public class DrivetrainDriveCommand extends CommandBase {
         // This makes sure that two commands that need the same subsystem dont mess eachother up. 
         // Example, if a command activated by a button needs to take control away from a default command.
         addRequirements(subsystem);
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
     }
 
     // Called 50 times a second if the robot is running
@@ -51,16 +47,5 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         // Send values to drivetrain
         drivetrain.arcadeDrive(speed, turn);
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }

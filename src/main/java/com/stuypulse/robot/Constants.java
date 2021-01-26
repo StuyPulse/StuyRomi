@@ -1,7 +1,12 @@
 package com.stuypulse.robot;
 
 import java.nio.file.Path;
+
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 
 /**
@@ -25,7 +30,10 @@ public interface Constants {
 
     interface Drivetrain {
 
-        double TRACK_WIDTH = 0.141; // METERS!!!
+        SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope for Angle", false);
+
+        double TRACK_WIDTH = 0.141; 
+        double DEAD_BAND = 0.1;
 
         interface Ports {
             int LEFT_MOTOR = 0;
@@ -41,6 +49,10 @@ public interface Constants {
         interface Odometry {
             double START_X = 0.0;
             double START_Y = 0.0;
+
+            Rotation2d START_ANG = new Rotation2d(0.0);
+
+            Pose2d START = new Pose2d(START_X, START_Y, START_ANG);
         }
 
         interface Encoders {

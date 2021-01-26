@@ -41,6 +41,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(new DrivetrainDriveCommand(drivetrain, driver));
+        driver.getBottomButton().whenPressed(() -> drivetrain.reset());
     }
 
     private void configureButtonBindings() {
