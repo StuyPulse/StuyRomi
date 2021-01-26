@@ -3,9 +3,11 @@ package com.stuypulse.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.stuypulse.robot.subsystems.Drivetrain;
-
+import com.stuypulse.stuylib.control.PIDController;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.filters.*;
 
 /**
@@ -17,10 +19,9 @@ public class DrivetrainDriveCommand extends CommandBase {
     private Drivetrain drivetrain;
     private Gamepad driver;
 
-    // These filters help smooth out driving
-    // But they are also optional
-    private IFilter speedFilter = new LowPassFilter(0.3);
-    private IFilter turnFilter = new LowPassFilter(0.2);
+    // These filters help smooth out driving but they are also optional
+    private IFilter speedFilter = new LowPassFilter(new SmartNumber("Drivetrain Speed Filter", 0.3));
+    private IFilter turnFilter = new LowPassFilter(new SmartNumber("Drivetrain Turn Filter", 0.2));
 
     public DrivetrainDriveCommand(Drivetrain subsystem, Gamepad gamepad) {
         drivetrain = subsystem;
