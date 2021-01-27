@@ -39,14 +39,6 @@ public interface Constants {
         double TRACK_WIDTH = 0.141; 
         double DEAD_BAND = 0.1;
 
-        DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
-
-        SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
-            FeedForward.S, 
-            FeedForward.V, 
-            FeedForward.A
-        );
-
         interface Ports {
             int LEFT_MOTOR = 0;
             int RIGHT_MOTOR = 1;
@@ -74,35 +66,48 @@ public interface Constants {
             double DISTANCE_PER_PULSE = (Math.PI * WHEEL_DIAMETER_METER) / COUNTS_PER_REVOLUTION;
         }
 
-        interface FeedForward {
-            double S = 0.0;
-            double V = 10.0;
-            double A = 0.0;
-        }
+        interface Motion {
 
-        interface TrajectoryConfiguration {
-            
-            double MAX_VOLTAGE = 10.0;
-            
-            DifferentialDriveVoltageConstraint VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
-                MOTOR_FEED_FORWARD,
-                KINEMATICS, 
-                MAX_VOLTAGE
+            DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+    
+            SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
+                FeedForward.S, 
+                FeedForward.V, 
+                FeedForward.A
             );
 
-            TrajectoryConfig CONFIG = new TrajectoryConfig(
-                0.5, // Velocity (m/s)
-                1.0 // Acceleration (m/s^2)
-            )
-            .setKinematics(KINEMATICS)
-            .addConstraint(VOLTAGE_CONSTRAINT);
+            interface FeedForward {
+                double S = 0.0;
+                double V = 10.0;
+                double A = 0.0;
+            }
+    
+            interface TrajectoryConfiguration {
+                
+                double MAX_VOLTAGE = 10.0;
+                
+                DifferentialDriveVoltageConstraint VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
+                    MOTOR_FEED_FORWARD,
+                    KINEMATICS, 
+                    MAX_VOLTAGE
+                );
+    
+                TrajectoryConfig CONFIG = new TrajectoryConfig(
+                    0.5, // Velocity (m/s)
+                    1.0 // Acceleration (m/s^2)
+                )
+                .setKinematics(KINEMATICS)
+                .addConstraint(VOLTAGE_CONSTRAINT);
+            }
+    
+            interface PID {
+                double P = 0.5;
+                double I = 0;
+                double D = 0;
+            }
         }
 
-        interface PID {
-            double P = 0.5;
-            double I = 0;
-            double D = 0;
-        }
+        
 
     }
 

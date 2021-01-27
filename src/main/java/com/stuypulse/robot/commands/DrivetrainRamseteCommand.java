@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import com.stuypulse.robot.subsystems.Drivetrain;
 
-import com.stuypulse.robot.Constants.Drivetrain.*;
+import com.stuypulse.robot.Constants.Drivetrain.Motion;
 
 import java.io.IOException;
 
@@ -24,11 +24,11 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
             trajectory,
             drivetrain::getPose,
             new RamseteController(),
-            Constants.Drivetrain.MOTOR_FEED_FORWARD,
-            Constants.Drivetrain.KINEMATICS,
+            Motion.MOTOR_FEED_FORWARD,
+            Motion.KINEMATICS,
             drivetrain::getWheelSpeeds,
-            new PIDController(PID.P, PID.I, PID.D),
-            new PIDController(PID.P, PID.I, PID.D),
+            new PIDController(Motion.PID.P, Motion.PID.I, Motion.PID.D),
+            new PIDController(Motion.PID.P, Motion.PID.I, Motion.PID.D),
             drivetrain::tankDriveVolts,
             drivetrain
         );

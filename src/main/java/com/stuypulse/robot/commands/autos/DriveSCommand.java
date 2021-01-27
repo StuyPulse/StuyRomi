@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import com.stuypulse.robot.Constants;
+import com.stuypulse.robot.Constants.Drivetrain.Motion;
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.subsystems.*;
 
@@ -36,7 +36,7 @@ public class DriveSCommand extends SequentialCommandGroup {
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(0.9, 0, new Rotation2d(0)),
         // Pass config
-        Constants.Drivetrain.TrajectoryConfiguration.CONFIG
+        Motion.TrajectoryConfiguration.CONFIG
     );
 
     public DriveSCommand(Drivetrain drivetrain) {
