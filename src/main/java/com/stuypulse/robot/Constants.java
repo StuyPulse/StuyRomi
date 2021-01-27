@@ -78,7 +78,7 @@ public interface Constants {
             
             double MAX_VOLTAGE = 10.0;
 
-            DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+            DifferentialDriveVoltageConstraint VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
                     new SimpleMotorFeedforward(FeedForward.S, FeedForward.V, FeedForward.A), 
                     KINEMATICS, 
                     MAX_VOLTAGE
@@ -89,7 +89,7 @@ public interface Constants {
                     1.0 // Acceleration (m/s^2)
                 )
                 .setKinematics(KINEMATICS)
-                .addConstraint(autoVoltageConstraint);
+                .addConstraint(VOLTAGE_CONSTRAINT);
         }
 
         interface PID {
