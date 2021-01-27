@@ -26,7 +26,7 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
             drivetrain::getPose,
             new RamseteController(),
             new SimpleMotorFeedforward(FeedForward.S, FeedForward.V, FeedForward.A),
-            drivetrain.getKinematics(),
+            Constants.Drivetrain.KINEMATICS,
             drivetrain::getWheelSpeeds,
             new PIDController(PID.P, PID.I, PID.D),
             new PIDController(PID.P, PID.I, PID.D),

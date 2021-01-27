@@ -5,8 +5,12 @@ import java.nio.file.Path;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
 
 /**
@@ -35,6 +39,8 @@ public interface Constants {
         double TRACK_WIDTH = 0.141; 
         double DEAD_BAND = 0.1;
 
+        DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+
         interface Ports {
             int LEFT_MOTOR = 0;
             int RIGHT_MOTOR = 1;
@@ -62,15 +68,32 @@ public interface Constants {
             double DISTANCE_PER_PULSE = (Math.PI * WHEEL_DIAMETER_METER) / COUNTS_PER_REVOLUTION;
         }
 
-        // TODO: fill in motion profile here (i think)
         interface FeedForward {
             double S = 0.0;
-            double V = 0.0;
+            double V = 10.0;
             double A = 0.0;
         }
 
+        interface TrajectoryConfiguration {
+            
+            double MAX_VOLTAGE = 10.0;
+
+            DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+                    new SimpleMotorFeedforward(FeedForward.S, FeedForward.V, FeedForward.A), 
+                    KINEMATICS, 
+                    MAX_VOLTAGE
+                );
+
+            TrajectoryConfig CONFIG = new TrajectoryConfig(
+                    0.5, // Velocity (m/s)
+                    1.0 // Acceleration (m/s^2)
+                )
+                .setKinematics(KINEMATICS)
+                .addConstraint(autoVoltageConstraint);
+        }
+
         interface PID {
-            double P = 0;
+            double P = 0.5;
             double I = 0;
             double D = 0;
         }

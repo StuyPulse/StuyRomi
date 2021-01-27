@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartString;
 
 import edu.wpi.first.wpilibj.geometry.*;
 
@@ -65,7 +66,6 @@ public class Drivetrain extends SubsystemBase {
 
         // Odemetery
         odometry = new DifferentialDriveOdometry(Odometry.START_ANG, Odometry.START);
-        kinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
     }
 
 
@@ -177,10 +177,6 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    public DifferentialDriveKinematics getKinematics() {
-        return kinematics;
-    }
-
     @Override
     public void periodic() {
         odometry.update(
@@ -188,6 +184,8 @@ public class Drivetrain extends SubsystemBase {
             this.getLeftDistance(),
             this.getRightDistance()
         );
+
+        new SmartString("Robot Position").set(odometry.getPoseMeters().toString());
     }
 
     private void resetOdometer() {
@@ -220,7 +218,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         leftMotor.setVoltage(leftVolts);
-        rightMotor.setVoltage(rightVolts);
+        rightMotor.setVoltage(-rightVolts);
         drivetrain.feed();
     }
 

@@ -12,10 +12,11 @@ import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.robot.subsystems.OnBoardIO.ChannelMode;
 
 import com.stuypulse.robot.commands.*;
+import com.stuypulse.robot.commands.autos.*;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
-
+import com.stuypulse.stuylib.commands.ThreadedCommand;
 import com.stuypulse.stuylib.control.*;
 import com.stuypulse.stuylib.math.*;
 
@@ -42,16 +43,15 @@ public class RobotContainer {
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(new DrivetrainDriveCommand(drivetrain, driver));
         driver.getBottomButton().whenPressed(() -> drivetrain.reset());
+        driver.getRightButton().whenPressed(new DriveSCommand(drivetrain));
     }
 
     private void configureButtonBindings() {
     }
 
     // Use SmartDashboard to select auton routine
-    private final SendableChooser<Command> autons = new SendableChooser<>();
-
     public Command getAutonomousCommand() {
-        return autons.getSelected();
+        return new DriveSCommand(drivetrain);
     }
 
 }

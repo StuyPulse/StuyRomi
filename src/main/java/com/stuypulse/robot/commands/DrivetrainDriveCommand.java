@@ -48,5 +48,7 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         // Send values to drivetrain
         drivetrain.arcadeDrive(speed, turn);
+
+        new SmartNumber("DT Angle").set(drivetrain.getAngle().toDegrees());
     }
 }
