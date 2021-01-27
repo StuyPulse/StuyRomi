@@ -5,6 +5,7 @@
 package com.stuypulse.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import com.stuypulse.robot.subsystems.Drivetrain;
@@ -16,7 +17,6 @@ import com.stuypulse.robot.commands.autos.*;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
-import com.stuypulse.stuylib.commands.ThreadedCommand;
 import com.stuypulse.stuylib.control.*;
 import com.stuypulse.stuylib.math.*;
 
@@ -38,20 +38,31 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+        configureAutons();
     }
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(new DrivetrainDriveCommand(drivetrain, driver));
-        driver.getBottomButton().whenPressed(() -> drivetrain.reset());
-        driver.getRightButton().whenPressed(new DriveSCommand(drivetrain));
     }
 
     private void configureButtonBindings() {
+        driver.getBottomButton().whenPressed(() -> drivetrain.reset());
+    }
+
+    private static final SendableChooser<Command> AUTONS = new SendableChooser<>();
+
+    private void configureAutons() {
+        AUTONS.setDefaultOption("No Auton", new DoNothingAuton());
+        
+        // List autons here:
+        AUTONS.addOption("Drive-S", new DriveSCommand(drivetrain));
+
+        SmartDashboard.putData("Autonomous Commands", AUTONS);
     }
 
     // Use SmartDashboard to select auton routine
     public Command getAutonomousCommand() {
-        return new DriveSCommand(drivetrain);
+        return AUTONS.getSelected();
     }
 
 }

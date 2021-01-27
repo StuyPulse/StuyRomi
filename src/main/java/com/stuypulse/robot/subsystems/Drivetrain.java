@@ -13,7 +13,6 @@ import com.stuypulse.robot.subsystems.sensors.RomiGyro;
 
 import static com.stuypulse.robot.Constants.Drivetrain.*;
 
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
@@ -39,7 +38,6 @@ public class Drivetrain extends SubsystemBase {
 
     // Odemetery
     private DifferentialDriveOdometry odometry;
-    private DifferentialDriveKinematics kinematics;
 
     public Drivetrain() {
 

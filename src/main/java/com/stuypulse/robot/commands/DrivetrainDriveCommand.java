@@ -3,10 +3,7 @@ package com.stuypulse.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.stuypulse.robot.subsystems.Drivetrain;
-import com.stuypulse.stuylib.control.PIDController;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.filters.*;
 

@@ -2,7 +2,6 @@ package com.stuypulse.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -25,7 +24,7 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
             trajectory,
             drivetrain::getPose,
             new RamseteController(),
-            new SimpleMotorFeedforward(FeedForward.S, FeedForward.V, FeedForward.A),
+            Constants.Drivetrain.MOTOR_FEED_FORWARD,
             Constants.Drivetrain.KINEMATICS,
             drivetrain::getWheelSpeeds,
             new PIDController(PID.P, PID.I, PID.D),
