@@ -36,8 +36,11 @@ public interface Constants {
 
         SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope for Angle", false);
 
+        double LEFT_VOLTAGE_MUL  = 1.0;
+        double RIGHT_VOLTAGE_MUL = -1.0;
+        
         double TRACK_WIDTH = 0.141; 
-        double DEAD_BAND = 0.1;
+        double DEAD_BAND = 0.05;
 
         interface Ports {
             int LEFT_MOTOR = 0;

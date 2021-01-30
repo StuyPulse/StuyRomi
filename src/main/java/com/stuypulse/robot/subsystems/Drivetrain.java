@@ -5,6 +5,7 @@
 package com.stuypulse.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.stuypulse.robot.subsystems.sensors.RomiGyro;
 
 import static com.stuypulse.robot.Constants.Drivetrain.*;
+
+import com.stuypulse.robot.Constants;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -65,8 +68,28 @@ public class Drivetrain extends SubsystemBase {
         // Odemetery
         odometry = new DifferentialDriveOdometry(Odometry.START_ANG, Odometry.START);
     }
+    
 
+    /*********************
+     * VOLTAGE FUNCTIONS *
+     *********************/
 
+    // Gets the current voltage of the robot, which affects speed
+    public double getBatteryVoltage() {
+        return RobotController.getBatteryVoltage();
+    }
+
+    // Gets the last set voltage for left motor
+    public double getLeftVoltage() {
+        return getBatteryVoltage() * leftMotor.get() / LEFT_VOLTAGE_MUL;
+    }
+
+    // Gets the last set voltage for right motor
+    public double getRightVoltage() {
+        return getBatteryVoltage() * rightMotor.get() / RIGHT_VOLTAGE_MUL;
+    }
+
+    
     /*********************
      * ENCODER FUNCTIONS *
      *********************/
@@ -126,6 +149,7 @@ public class Drivetrain extends SubsystemBase {
         rightEncoder.reset();
     }
 
+
     /******************
      * GYRO FUNCTIONS *
      ******************/
@@ -153,6 +177,7 @@ public class Drivetrain extends SubsystemBase {
     private void resetGyro() {
         gyro.reset();
     }
+
 
     /**********************
      * ODOMETER FUNCTIONS *
@@ -215,8 +240,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        leftMotor.setVoltage(leftVolts);
-        rightMotor.setVoltage(-rightVolts);
+        leftMotor.setVoltage(leftVolts * LEFT_VOLTAGE_MUL);
+        rightMotor.setVoltage(rightVolts * RIGHT_VOLTAGE_MUL);
         drivetrain.feed();
     }
 
