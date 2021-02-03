@@ -191,6 +191,10 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
+    public Rotation2d getRotation2d() {
+        return getAngle().getRotation2d();
+    }
+
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
@@ -198,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(
-            this.getAngle().getRotation2d(),
+            this.getRotation2d(),
             this.getLeftDistance(),
             this.getRightDistance()
         );
