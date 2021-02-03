@@ -16,8 +16,10 @@ import static com.stuypulse.robot.Constants.Drivetrain.*;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-import com.stuypulse.stuylib.network.SmartString;
+import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.math.SLMath;
 
 import edu.wpi.first.wpilibj.geometry.*;
 
@@ -78,12 +80,14 @@ public class Drivetrain extends SubsystemBase {
 
     // Gets the last set voltage for left motor
     public double getLeftVoltage() {
-        return getBatteryVoltage() * leftMotor.get() * LEFT_VOLTAGE_MUL;
+        // We divide by the voltage multiplier here because 
+        // we multiply by it when setting the motor
+        return (getBatteryVoltage() * leftMotor.get()) / LEFT_VOLTAGE_MUL;
     }
 
     // Gets the last set voltage for right motor
     public double getRightVoltage() {
-        return getBatteryVoltage() * rightMotor.get() * RIGHT_VOLTAGE_MUL;
+        return (getBatteryVoltage() * rightMotor.get()) / RIGHT_VOLTAGE_MUL;
     }
 
     
@@ -135,11 +139,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Angle of the robot based on the difference in encoder values
-    public Rotation2d getEncoderAngle() {
-        double diffMeters = getLeftDistance() - getRightDistance();
-        return new Rotation2d(
-            Math.toRadians(diffMeters / TRACK_WIDTH)
-        ); 
+    public Angle getEncoderAngle() {
+        double diffMeters = getRightDistance() - getLeftDistance();
+        return Angle.fromRadians(diffMeters / TRACK_WIDTH); 
     }
 
     /** Reset **/
@@ -153,25 +155,19 @@ public class Drivetrain extends SubsystemBase {
      * GYRO FUNCTIONS *
      ******************/
 
-    public Rotation2d getAngleRoll() {
-        return new Rotation2d(
-            Math.toRadians(gyro.getAngleX())
-        ); 
+    public Angle getAngleRoll() {
+        return Angle.fromDegrees(-gyro.getAngleX());
     }
 
-    public Rotation2d getAnglePitch() {
-        return new Rotation2d(
-            Math.toRadians(gyro.getAngleY())
-        ); 
+    public Angle getAnglePitch() {
+        return Angle.fromDegrees(gyro.getAngleY());
     }
 
-    public Rotation2d getAngleYaw() {
-        return new Rotation2d(
-            Math.toDegrees(gyro.getAngleZ())
-        ); 
+    public Angle getAngleYaw() {
+        return Angle.fromDegrees(-gyro.getAngleZ());
     }
 
-    public Rotation2d getAngle() {
+    public Angle getAngle() {
         if(USE_GYROSCOPE.get()) {
             return getAngleYaw();
         } else {
@@ -202,12 +198,10 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(
-            this.getAngle().times(-1),  // convert from C to CC
+            this.getAngle().getRotation2d(),
             this.getLeftDistance(),
             this.getRightDistance()
         );
-
-        new SmartString("Robot Position").set(odometry.getPoseMeters().toString());
     }
 
     private void resetOdometer() {
@@ -220,7 +214,6 @@ public class Drivetrain extends SubsystemBase {
         resetGyro();
         resetOdometer();
     }
-
 
     /*********************
      * DRIVING FUNCTIONS *
@@ -246,6 +239,58 @@ public class Drivetrain extends SubsystemBase {
 
     public void stop() {
         drivetrain.stopMotor();
+    }
+
+    /****************************
+     * SMART DASHBOARD SENDABLE *
+     ****************************/
+
+    // Rounds a double to a certain number of sigfigs to avoid clutter
+    private double round(double n) {
+        return SLMath.round(n, SENDABLE_SIGFIGS);
+    }
+
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+
+        // Odometry Functions
+        // You have to call getPose() inside the lambda or else it never updates
+        builder.addStringProperty("Odometer X: ", 
+            () -> round(getPose().getX()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Odometer Y: ", 
+            () -> round(getPose().getY()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Odometer Rotation: ", 
+            () -> round(getPose().getRotation().getDegrees()) + "deg", 
+            (x) -> {});
+
+        // Left and Right motor functions
+        builder.addStringProperty("Distance Left: ", 
+            () -> round(getLeftDistance()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Distance Right: ", 
+            () -> round(getRightDistance()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Velocity Left: ", 
+            () -> round(getLeftVelocity()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Velocity Right: ", 
+            () -> round(getRightVelocity()) + "m", 
+            (x) -> {});
+
+        builder.addStringProperty("Voltage Left: ", 
+            () -> round(getLeftVoltage()) + "V", 
+            (x) -> {});
+
+        builder.addStringProperty("Voltage Right: ", 
+            () -> round(getRightVoltage()) + "V", 
+            (x) -> {});
     }
 
 }

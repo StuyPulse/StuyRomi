@@ -4,9 +4,6 @@
 
 package com.stuypulse.robot;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import com.stuypulse.robot.subsystems.Drivetrain;
@@ -39,52 +36,31 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
-        configureAutons();
     }
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(new DrivetrainDriveCommand(drivetrain, driver));
+        onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
     }
 
     private void configureButtonBindings() {
         driver.getBottomButton().whenPressed(() -> drivetrain.reset());
     }
 
-    private static final SendableChooser<Command> AUTONS = new SendableChooser<>();
-
-    private void configureAutons() {
-        AUTONS.setDefaultOption("No Auton", new DoNothingAuton());
-
-        // List autons here:
-        AUTONS.addOption("Drive-S", new DriveSCommand(drivetrain));
-
-        SmartDashboard.putData("Autonomous Commands", AUTONS);
+    // Autonomous Commands 
+    public Command getAutonomousCommand(String file) {
+        try {
+            return new DrivetrainRamseteCommand(drivetrain, file);
+        } catch(IOException e) {
+            System.err.println("Error Opening \"" + file + "\", Reverting to DoNothingAuton()!");
+            System.out.println(e.getStackTrace());
+            return new DoNothingAuton();
+        }
     }
 
-    // Use SmartDashboard to select auton routine
-    public Command getAutonomousCommand() throws IOException {
-        return new DrivetrainRamseteCommand(drivetrain, "output/Test.wpilib.json");
-    }
-
-    private void updateRobotPoseData() {
-        Pose2d pose = drivetrain.getPose(); 
-
-        SmartDashboard.putNumber("X Pos: ", pose.getX()); 
-        SmartDashboard.putNumber("Y Pos: ", pose.getY()); 
-        SmartDashboard.putNumber("Rotation: ", pose.getRotation().getDegrees()); 
-    }
-
-    public void updateSmartDashboard() {
-        SmartDashboard.putNumber("Left Distance: ", drivetrain.getLeftDistance()); 
-        SmartDashboard.putNumber("Right Distance: ", drivetrain.getRightDistance()); 
-
-        SmartDashboard.putNumber("Left Velocity: ", drivetrain.getLeftVelocity()); 
-        SmartDashboard.putNumber("Right Velocity: ", drivetrain.getRightVelocity());
-
-        SmartDashboard.putNumber("Left Voltage: ", drivetrain.getLeftVoltage()); 
-        SmartDashboard.putNumber("Right Voltage: ", drivetrain.getRightVoltage());
-    
-        updateRobotPoseData();
+    public Command getAutonomousCommand() {
+        return new DriveSCommand(drivetrain);
+        // return getAutonomousCommand("output/Test.wpilib.json");
     }
 
 }

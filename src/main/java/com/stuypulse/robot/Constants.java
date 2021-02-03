@@ -33,6 +33,8 @@ public interface Constants {
 
         SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope for Angle", false);
 
+        int SENDABLE_SIGFIGS = 5;
+
         double LEFT_VOLTAGE_MUL  = 1.0;
         double RIGHT_VOLTAGE_MUL = -1.0;
         

@@ -1,7 +1,5 @@
 package com.stuypulse.robot;
 
-import java.io.IOException;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -66,13 +64,8 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
 
-        // Get selected routine from the SmartDashboard
-        try {
-            m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // Get selected routine
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
@@ -99,7 +92,6 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        m_robotContainer.updateSmartDashboard();
     }
 
     @Override
