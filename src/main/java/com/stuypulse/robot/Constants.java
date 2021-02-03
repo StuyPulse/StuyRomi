@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -85,32 +82,12 @@ public interface Constants {
                 double A = 0.0;
             }
     
-            interface TrajectoryConfiguration {
-                
-                double MAX_VOLTAGE = 10.0;
-                
-                DifferentialDriveVoltageConstraint VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
-                    MOTOR_FEED_FORWARD,
-                    KINEMATICS, 
-                    MAX_VOLTAGE
-                );
-    
-                TrajectoryConfig CONFIG = new TrajectoryConfig(
-                    0.5, // Velocity (m/s)
-                    1.0 // Acceleration (m/s^2)
-                )
-                .setKinematics(KINEMATICS)
-                .addConstraint(VOLTAGE_CONSTRAINT);
-            }
-    
             interface PID {
                 double P = 0.5;
                 double I = 0;
                 double D = 0;
             }
         }
-
-        
 
     }
 

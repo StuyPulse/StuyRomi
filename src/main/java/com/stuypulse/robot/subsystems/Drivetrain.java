@@ -14,12 +14,9 @@ import com.stuypulse.robot.subsystems.sensors.RomiGyro;
 
 import static com.stuypulse.robot.Constants.Drivetrain.*;
 
-import com.stuypulse.robot.Constants;
-
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
-import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartString;
 
 import edu.wpi.first.wpilibj.geometry.*;
@@ -81,12 +78,12 @@ public class Drivetrain extends SubsystemBase {
 
     // Gets the last set voltage for left motor
     public double getLeftVoltage() {
-        return getBatteryVoltage() * leftMotor.get() / LEFT_VOLTAGE_MUL;
+        return getBatteryVoltage() * leftMotor.get() * LEFT_VOLTAGE_MUL;
     }
 
     // Gets the last set voltage for right motor
     public double getRightVoltage() {
-        return getBatteryVoltage() * rightMotor.get() / RIGHT_VOLTAGE_MUL;
+        return getBatteryVoltage() * rightMotor.get() * RIGHT_VOLTAGE_MUL;
     }
 
     
@@ -138,9 +135,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Angle of the robot based on the difference in encoder values
-    public Angle getEncoderAngle() {
+    public Rotation2d getEncoderAngle() {
         double diffMeters = getLeftDistance() - getRightDistance();
-        return Angle.fromRadians(diffMeters / TRACK_WIDTH);
+        return new Rotation2d(
+            Math.toRadians(diffMeters / TRACK_WIDTH)
+        ); 
     }
 
     /** Reset **/
@@ -154,19 +153,25 @@ public class Drivetrain extends SubsystemBase {
      * GYRO FUNCTIONS *
      ******************/
 
-    public Angle getAngleRoll() {
-        return Angle.fromDegrees(gyro.getAngleX());
+    public Rotation2d getAngleRoll() {
+        return new Rotation2d(
+            Math.toRadians(gyro.getAngleX())
+        ); 
     }
 
-    public Angle getAnglePitch() {
-        return Angle.fromDegrees(gyro.getAngleY());
+    public Rotation2d getAnglePitch() {
+        return new Rotation2d(
+            Math.toRadians(gyro.getAngleY())
+        ); 
     }
 
-    public Angle getAngleYaw() {
-        return Angle.fromDegrees(gyro.getAngleZ());
+    public Rotation2d getAngleYaw() {
+        return new Rotation2d(
+            Math.toDegrees(gyro.getAngleZ())
+        ); 
     }
 
-    public Angle getAngle() {
+    public Rotation2d getAngle() {
         if(USE_GYROSCOPE.get()) {
             return getAngleYaw();
         } else {
@@ -190,12 +195,6 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
-    public Rotation2d getRotation2d() {
-        return new Rotation2d(
-            -this.getAngle().toRadians()
-        );
-    }
-
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
@@ -203,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(
-            this.getRotation2d(),
+            this.getAngle().times(-1),  // convert from C to CC
             this.getLeftDistance(),
             this.getRightDistance()
         );

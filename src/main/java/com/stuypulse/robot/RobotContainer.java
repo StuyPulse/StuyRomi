@@ -4,6 +4,7 @@
 
 package com.stuypulse.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,8 +20,6 @@ import com.stuypulse.robot.commands.autos.*;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
-import com.stuypulse.stuylib.control.*;
-import com.stuypulse.stuylib.math.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -65,6 +64,27 @@ public class RobotContainer {
     // Use SmartDashboard to select auton routine
     public Command getAutonomousCommand() throws IOException {
         return new DrivetrainRamseteCommand(drivetrain, "output/Test.wpilib.json");
+    }
+
+    private void updateRobotPoseData() {
+        Pose2d pose = drivetrain.getPose(); 
+
+        SmartDashboard.putNumber("X Pos: ", pose.getX()); 
+        SmartDashboard.putNumber("Y Pos: ", pose.getY()); 
+        SmartDashboard.putNumber("Rotation: ", pose.getRotation().getDegrees()); 
+    }
+
+    public void updateSmartDashboard() {
+        SmartDashboard.putNumber("Left Distance: ", drivetrain.getLeftDistance()); 
+        SmartDashboard.putNumber("Right Distance: ", drivetrain.getRightDistance()); 
+
+        SmartDashboard.putNumber("Left Velocity: ", drivetrain.getLeftVelocity()); 
+        SmartDashboard.putNumber("Right Velocity: ", drivetrain.getRightVelocity());
+
+        SmartDashboard.putNumber("Left Voltage: ", drivetrain.getLeftVoltage()); 
+        SmartDashboard.putNumber("Right Voltage: ", drivetrain.getRightVoltage());
+    
+        updateRobotPoseData();
     }
 
 }
