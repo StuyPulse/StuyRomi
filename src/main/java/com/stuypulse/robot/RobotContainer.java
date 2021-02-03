@@ -12,6 +12,8 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.robot.subsystems.OnBoardIO.ChannelMode;
 
+import java.io.IOException;
+
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.autos.*;
 
@@ -53,7 +55,7 @@ public class RobotContainer {
 
     private void configureAutons() {
         AUTONS.setDefaultOption("No Auton", new DoNothingAuton());
-        
+
         // List autons here:
         AUTONS.addOption("Drive-S", new DriveSCommand(drivetrain));
 
@@ -61,8 +63,8 @@ public class RobotContainer {
     }
 
     // Use SmartDashboard to select auton routine
-    public Command getAutonomousCommand() {
-        return AUTONS.getSelected();
+    public Command getAutonomousCommand() throws IOException {
+        return new DrivetrainRamseteCommand(drivetrain, "output/Test.wpilib.json");
     }
 
 }

@@ -2,6 +2,8 @@ package com.stuypulse.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -19,9 +21,12 @@ import com.stuypulse.robot.Constants;
  */
 public final class DrivetrainRamseteCommand extends RamseteCommand {
     
+    private Drivetrain drivetrain;
+
     public DrivetrainRamseteCommand(Drivetrain drivetrain, Trajectory trajectory) {
         super(
-            trajectory,
+            // Transform the Trajectory so that it starts at (0, 0)
+            trajectory.transformBy(new Transform2d(trajectory.getInitialPose(), new Pose2d())),
             drivetrain::getPose,
             new RamseteController(),
             Motion.MOTOR_FEED_FORWARD,
@@ -32,6 +37,8 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
             drivetrain::tankDriveVolts,
             drivetrain
         );
+
+        this.drivetrain = drivetrain;
     }
 
     public DrivetrainRamseteCommand(Drivetrain drivetrain, String path) throws IOException {
@@ -43,6 +50,14 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
             )
 
         );
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        // reset the drivetrain so it begins driveing at (0, 0)
+        drivetrain.reset();
     }
 
 }
