@@ -16,7 +16,9 @@ import static com.stuypulse.robot.Constants.Drivetrain.*;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
@@ -40,6 +42,9 @@ public class Drivetrain extends SubsystemBase {
 
     // Odemetery
     private DifferentialDriveOdometry odometry;
+
+    // Field Widget
+    private Field2d field; 
 
     public Drivetrain() {
 
@@ -66,6 +71,10 @@ public class Drivetrain extends SubsystemBase {
 
         // Odemetery
         odometry = new DifferentialDriveOdometry(Odometry.START_ANG, Odometry.START);
+
+        // Field Widget
+        field = new Field2d(); 
+        updateField();
     }
     
 
@@ -199,6 +208,11 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
+    private void updateField() {
+        field.setRobotPose(getPose());
+        SmartDashboard.putData("Field", field);
+    }
+
     @Override
     public void periodic() {
         odometry.update(
@@ -206,10 +220,12 @@ public class Drivetrain extends SubsystemBase {
             this.getLeftDistance(),
             this.getRightDistance()
         );
+        updateField();
     }
 
     private void resetOdometer() {
         odometry.resetPosition(Odometry.START, Odometry.START_ANG);
+        updateField();
     }
 
     // Resets all encoders / gyroscopes to 0
