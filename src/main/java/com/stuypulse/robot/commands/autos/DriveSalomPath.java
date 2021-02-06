@@ -18,21 +18,24 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import com.stuypulse.robot.Constants;
+import com.stuypulse.robot.FieldMap;
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.subsystems.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.util.Units;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  
 // For more information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 
-public class DriveSCommand extends SequentialCommandGroup {
+public class DriveSalomPath extends SequentialCommandGroup {
 
     // maximum values different for every path
-    private static final double MAX_VELOCITY = 0.5 / Constants.ROBOT_SCALE; // m/s
+    private static final double MAX_VELOCITY = 0.25 / Constants.ROBOT_SCALE; // m/s
     private static final double MAX_ACCELERATION = 1.0 / Constants.ROBOT_SCALE; // m/s^2
 
     // Trajectory Configuration (ie max velocity, max acceleartion)
@@ -48,23 +51,47 @@ public class DriveSCommand extends SequentialCommandGroup {
         List.of(
         ); 
 
+    /*
     private static final Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
+        new Pose2d(FieldMap.get("E1"), new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
         List.of(
-            new Translation2d(2, 2),
-            new Translation2d(4, -2)
+            FieldMap.get("D3"),
+            FieldMap.get("C4"),
+            FieldMap.get("B6"),
+            FieldMap.get("C8"),
+            FieldMap.get("D9"),
+            FieldMap.get("E10"),
+            FieldMap.get("D11"),
+            FieldMap.get("C10"),
+            FieldMap.get("D9"),
+            FieldMap.get("E8"),
+            FieldMap.get("E6"),
+            FieldMap.get("E4"),
+            FieldMap.get("D3")
         ),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(6, 0, new Rotation2d(0)),
+        new Pose2d(FieldMap.get("C1"), Rotation2d.fromDegrees(180)),
 
         
         // Pass config
         config.setKinematics(kinematics).addConstraints(constraints)
-    );
+    );*/
+    private static final Trajectory trajectory = FieldMap.getTrajectory(
+        "e1",
+        new Rotation2d(0),
+        
+        "d3 c4 b6 c8 d9 e10 d11 c10 d9 e8 e6 e4 d3",
 
-    public DriveSCommand(Drivetrain drivetrain) {
+        "c1",
+        new Rotation2d(180),
+        
+        config.setKinematics(kinematics).addConstraints(constraints)    
+    );
+    
+    
+    public DriveSalomPath(Drivetrain drivetrain) {
         // Add your commands in the super() call, e.g.
         // super(new FooCommand(), new BarCommand());
         super(new DrivetrainRamseteCommand(drivetrain, trajectory));
