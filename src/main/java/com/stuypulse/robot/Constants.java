@@ -23,7 +23,7 @@ public interface Constants {
     // This is the scale for units, this is used to make the robot simulate another size
     // The romi is about 5 inches across, and edwin is about 30 inches across
     // By setting the robot scale to 1.0 / 6.0, we can simulate a robot the size of edwin
-    double ROBOT_SCALE = 1.0 / 6.0;
+    double ROBOT_SCALE = 1.0 / 5.0;
 
     // for file io
     Path DEPLOY_DIRECTORY = Filesystem.getDeployDirectory().toPath();
@@ -73,20 +73,20 @@ public interface Constants {
 
         interface Motion {
 
-            DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+            DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH / ROBOT_SCALE);
     
             SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
                 FeedForward.S, 
-                FeedForward.V, 
-                FeedForward.A
+                FeedForward.V / ROBOT_SCALE, 
+                FeedForward.A / ROBOT_SCALE
             );
 
             interface FeedForward {
-                double S = 0.0;
-                double V = 1.5;
-                double A = 0.0;
+                double S = 0.46;
+                double V = 9.75;
+                double A = 0.0221;
             }
-    
+            
             interface PID {
                 double P = 0.1;
                 double I = 0;
