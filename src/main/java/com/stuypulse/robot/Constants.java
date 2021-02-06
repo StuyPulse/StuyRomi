@@ -73,7 +73,7 @@ public interface Constants {
 
         interface Motion {
 
-            DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH / ROBOT_SCALE);
+            DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
     
             SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
                 FeedForward.S, 
