@@ -22,6 +22,8 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.subsystems.*;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  
 // For more information, see:
@@ -30,8 +32,8 @@ import java.util.List;
 public class DriveSCommand extends SequentialCommandGroup {
 
     // maximum values different for every path
-    private static final double MAX_VELOCITY = 0.5; // m/s
-    private static final double MAX_ACCELERATION = 1.0; // m/s^2
+    private static final double MAX_VELOCITY = 0.5 / Constants.ROBOT_SCALE; // m/s
+    private static final double MAX_ACCELERATION = 1.0 / Constants.ROBOT_SCALE; // m/s^2
 
     // Trajectory Configuration (ie max velocity, max acceleartion)
     private static final TrajectoryConfig config = 
@@ -44,13 +46,6 @@ public class DriveSCommand extends SequentialCommandGroup {
     // List of constraints
     private static final List<TrajectoryConstraint> constraints = 
         List.of(
-            // Put constraints here 
-            new RectangularRegionConstraint(
-                // Go at 75% the max speed at the beginning 
-                new Translation2d(0, 0), 
-                new Translation2d(0.3, 0.3), 
-                new MaxVelocityConstraint(MAX_VELOCITY * 0.75)
-            )
         ); 
 
     private static final Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
@@ -58,11 +53,13 @@ public class DriveSCommand extends SequentialCommandGroup {
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
         List.of(
-            new Translation2d(0.3, 0.3),
-            new Translation2d(0.6, -0.3)
+            new Translation2d(2, 2),
+            new Translation2d(4, -2)
         ),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(0.9, 0, new Rotation2d(0)),
+        new Pose2d(6, 0, new Rotation2d(0)),
+
+        
         // Pass config
         config.setKinematics(kinematics).addConstraints(constraints)
     );
