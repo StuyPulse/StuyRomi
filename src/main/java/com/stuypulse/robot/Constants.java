@@ -77,8 +77,8 @@ public interface Constants {
     
             SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
                 FeedForward.S, 
-                FeedForward.V / ROBOT_SCALE, 
-                FeedForward.A / ROBOT_SCALE
+                FeedForward.V * ROBOT_SCALE, 
+                FeedForward.A * ROBOT_SCALE
             );
 
             interface FeedForward {
