@@ -50,34 +50,8 @@ public class DriveSalomPath extends SequentialCommandGroup {
     private static final List<TrajectoryConstraint> constraints = 
         List.of(
         ); 
-
-    /*
-    private static final Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(FieldMap.get("E1"), new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(
-            FieldMap.get("D3"),
-            FieldMap.get("C4"),
-            FieldMap.get("B6"),
-            FieldMap.get("C8"),
-            FieldMap.get("D9"),
-            FieldMap.get("E10"),
-            FieldMap.get("D11"),
-            FieldMap.get("C10"),
-            FieldMap.get("D9"),
-            FieldMap.get("E8"),
-            FieldMap.get("E6"),
-            FieldMap.get("E4"),
-            FieldMap.get("D3")
-        ),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(FieldMap.get("C1"), Rotation2d.fromDegrees(180)),
-
-        
-        // Pass config
-        config.setKinematics(kinematics).addConstraints(constraints)
-    );*/
+    
+    // Trajectory
     private static final Trajectory trajectory = FieldMap.getTrajectory(
         "e1",
         new Rotation2d(0),
