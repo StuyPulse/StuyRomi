@@ -1,13 +1,13 @@
 package com.stuypulse.robot;
 
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.util.Units;
-
 import java.util.List;
 import java.util.ArrayList;
+import edu.wpi.first.wpilibj.util.Units;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -25,26 +25,29 @@ public interface FieldMap {
     double ROW_INCHES = 30;
     
     static Translation2d get(String name) {
-        Translation2d output;
         if (name.split(":").length > 1)
-            output = getRange(name);
+            return getRange(name);
         else
-            output = getPoint(name);
-        System.out.println(output.getX()+", "+output.getY());
-        return output;
+            return getPoint(name);
     }
     
-    private static Translation2d getRange(String name) {
+    static Translation2d getRange(String name) {
         String[] names = name.split(":");
-        Translation2d[] points = new Translation2d[names.length];
+        double x = 0, y = 0;
 
-        for (int i = 0; i < points.length; i++)
-            points[i] = get(names[i]);
+        for (String i : names) {
+            Translation2d temp = getPoint(i);
+            x += temp.getX();
+            y += temp.getY();
+        }   
         
-        return avg(points);
+        return new Translation2d(
+            x / names.length,
+            y / names.length
+        );
     }
 
-    private static Translation2d getPoint(String name) {
+    static Translation2d getPoint(String name) {
         name = name.toUpperCase();
 
         // Assume the string is the right length
@@ -89,7 +92,7 @@ public interface FieldMap {
         );
     }
 
-    private static List<Translation2d> parsePoints(String name) {
+    static List<Translation2d> parsePoints(String name) {
         String[] a = name.split("\\s+"); // i dont think java has multiline strings but \n worksYTea
         List<Translation2d> output = new ArrayList<>();
 
@@ -97,19 +100,5 @@ public interface FieldMap {
             output.add(get(a[i]));
         
         return output;
-    }
-    
-    static Translation2d avg(Translation2d[] inputs) {
-        double x = 0, y = 0;
-
-        for (Translation2d a : inputs) {
-            x += a.getX();
-            y += a.getY();
-        }
-
-        x /= inputs.length;
-        y /= inputs.length;
-
-        return new Translation2d(x, y);
     }
 }
