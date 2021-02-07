@@ -25,6 +25,26 @@ public interface FieldMap {
     double ROW_INCHES = 30;
     
     static Translation2d get(String name) {
+        Translation2d output;
+        if (name.split(":").length > 1)
+            output = getRange(name);
+        else
+            output = getPoint(name);
+        System.out.println(output.getX()+", "+output.getY());
+        return output;
+    }
+    
+    private static Translation2d getRange(String name) {
+        String[] names = name.split(":");
+        Translation2d[] points = new Translation2d[names.length];
+
+        for (int i = 0; i < points.length; i++)
+            points[i] = get(names[i]);
+        
+        return avg(points);
+    }
+
+    private static Translation2d getPoint(String name) {
         name = name.toUpperCase();
 
         // Assume the string is the right length
@@ -35,16 +55,6 @@ public interface FieldMap {
             Units.inchesToMeters(number * ROW_INCHES),
             Units.inchesToMeters(letter * COLUMN_INCHES)
         );
-    }
-
-    static List<Translation2d> parsePoints(String name) {
-        String[] a = name.split("\\s+"); // i dont think java has multiline strings but \n worksYTea
-        List<Translation2d> output = new ArrayList<>();
-
-        for (int i = 0; i < a.length; i++)
-            output.add(get(a[i]));
-        
-        return output;
     }
     
     /**
@@ -77,5 +87,29 @@ public interface FieldMap {
 
             constraints
         );
+    }
+
+    private static List<Translation2d> parsePoints(String name) {
+        String[] a = name.split("\\s+"); // i dont think java has multiline strings but \n worksYTea
+        List<Translation2d> output = new ArrayList<>();
+
+        for (int i = 0; i < a.length; i++)
+            output.add(get(a[i]));
+        
+        return output;
+    }
+    
+    static Translation2d avg(Translation2d[] inputs) {
+        double x = 0, y = 0;
+
+        for (Translation2d a : inputs) {
+            x += a.getX();
+            y += a.getY();
+        }
+
+        x /= inputs.length;
+        y /= inputs.length;
+
+        return new Translation2d(x, y);
     }
 }
