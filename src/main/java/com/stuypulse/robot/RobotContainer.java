@@ -59,7 +59,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveSalomPath(drivetrain);
+        return new DriveSlalomPath(drivetrain);
         // return getAutonomousCommand("output/Test.wpilib.json");
     }
 
