@@ -12,18 +12,22 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants. This class should not be used for any other
+ * purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the constants are needed, to reduce verbosity.
  */
 public interface Constants {
 
-    // This is the scale for units, this is used to make the robot simulate another size
+    // This is the scale for units, this is used to make the robot simulate another
+    // size
     // The romi is about 5 inches across, and edwin is about 30 inches across
-    // By setting the robot scale to 1.0 / 6.0, we can simulate a robot the size of edwin
+    // By setting the robot scale to 1.0 / 6.0, we can simulate a robot the size of
+    // edwin
     double ROBOT_SCALE = 1.0 / 5.0;
 
     // for file io
@@ -39,10 +43,10 @@ public interface Constants {
 
         int SENDABLE_SIGFIGS = 5;
 
-        double LEFT_VOLTAGE_MUL  = 1.0;
+        double LEFT_VOLTAGE_MUL = 1.0;
         double RIGHT_VOLTAGE_MUL = -1.0;
-        
-        double TRACK_WIDTH = 0.141 / ROBOT_SCALE; 
+
+        double TRACK_WIDTH = 0.141 / ROBOT_SCALE;
         double DEAD_BAND = 0.05;
 
         interface Ports {
@@ -75,23 +79,20 @@ public interface Constants {
         interface Motion {
 
             DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
-    
-            SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
-                FeedForward.S, 
-                FeedForward.V * ROBOT_SCALE, 
-                FeedForward.A * ROBOT_SCALE
-            );
+
+            SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(FeedForward.S,
+                    FeedForward.V * ROBOT_SCALE, FeedForward.A * ROBOT_SCALE);
 
             interface FeedForward {
                 double S = 0.46;
                 double V = 9.75;
                 double A = 0.0221;
             }
-            
+
             interface PID {
-                double P = 0.1;
-                double I = 0;
-                double D = 0;
+                double P = 0.000268 * ROBOT_SCALE;
+                double I = 0 * ROBOT_SCALE;
+                double D = 0 * ROBOT_SCALE;
             }
         }
 

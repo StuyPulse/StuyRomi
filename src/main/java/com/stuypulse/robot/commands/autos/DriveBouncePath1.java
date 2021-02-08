@@ -27,45 +27,37 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.util.Units;
 
-
 // NOTE:  Consider using this command inline, rather than writing a subclass.  
 // For more information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 
-public class DriveSalomPath extends SequentialCommandGroup {
+public class DriveBouncePath1 extends SequentialCommandGroup {
 
     // maximum values different for every path
-    private static final double MAX_VELOCITY = 0.25 / Constants.ROBOT_SCALE; // m/s
-    private static final double MAX_ACCELERATION = 1.0 / Constants.ROBOT_SCALE; // m/s^2
+    private static final double MAX_VELOCITY = 0.2 / Constants.ROBOT_SCALE; // m/s
+    private static final double MAX_ACCELERATION = 0.5 / Constants.ROBOT_SCALE; // m/s^2
 
     // Trajectory Configuration (ie max velocity, max acceleartion)
-    private static final TrajectoryConfig config = 
-        new TrajectoryConfig(MAX_VELOCITY, MAX_ACCELERATION);
+    private static final TrajectoryConfig config = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCELERATION);
 
-    // Kinematics used for other constraints 
-    private static final DifferentialDriveKinematics kinematics = 
-        Constants.Drivetrain.Motion.KINEMATICS; 
+    // Kinematics used for other constraints
+    private static final DifferentialDriveKinematics kinematics = Constants.Drivetrain.Motion.KINEMATICS;
 
     // List of constraints
-    private static final List<TrajectoryConstraint> constraints = 
-        List.of(
-        ); 
-    
-    // Trajectory
-    private static final Trajectory trajectory = FieldMap.getTrajectory(
-        "e1",
-        Rotation2d.fromDegrees(0),
-        
-        "d3 c4 b6 c8 d9 e10 d11 c10 d9 e8 e6 e4 d3",
+    private static final List<TrajectoryConstraint> constraints = List.of();
 
-        "c1",
-        Rotation2d.fromDegrees(180),
-        
-        config.setKinematics(kinematics).addConstraints(constraints)    
-    );
-    
-    
-    public DriveSalomPath(Drivetrain drivetrain) {
+    // Group 1: c1, c2, b3, a3, b3, d4, e5, d6, a6, d6, e7, e8, d9, c9, a9, c9, c11
+
+    // Trajectory
+    private static final Trajectory trajectory = FieldMap.getTrajectory("c1", Rotation2d.fromDegrees(0),
+
+            "c2 b3 a3 b3 d4 e5 d6 a6 d6 e7 e8 d9 c9 a9 c9",
+
+            "c11", Rotation2d.fromDegrees(0),
+
+            config.setKinematics(kinematics).addConstraints(constraints));
+
+    public DriveBouncePath1(Drivetrain drivetrain) {
         // Add your commands in the super() call, e.g.
         // super(new FooCommand(), new BarCommand());
         super(new DrivetrainRamseteCommand(drivetrain, trajectory));

@@ -47,11 +47,11 @@ public class RobotContainer {
         driver.getBottomButton().whenPressed(() -> drivetrain.reset());
     }
 
-    // Autonomous Commands 
+    // Autonomous Commands
     public Command getAutonomousCommand(String file) {
         try {
             return new DrivetrainRamseteCommand(drivetrain, file);
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.err.println("Error Opening \"" + file + "\", Reverting to DoNothingAuton()!");
             System.out.println(e.getStackTrace());
             return new DoNothingAuton();
@@ -59,8 +59,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveSalomPath(drivetrain);
-        // return getAutonomousCommand("output/Test.wpilib.json");
+        return getAutonomousCommand("output/Racing Barrel 1.wpilib.json");
+
+        // return new DriveBouncePath1(drivetrain);
     }
 
 }

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 public interface FieldMap {
-
     static int getAlphaIndex(char in) {
         // A -> 4, B -> 3, C -> 2, D -> 1, E -> 0
         return 'E' - (Character.toUpperCase(in) - 'A');
