@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.*;
-import edu.wpi.first.wpilibj.trajectory.constraint.MaxVelocityConstraint;
-import edu.wpi.first.wpilibj.trajectory.constraint.RectangularRegionConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -32,7 +30,7 @@ import edu.wpi.first.wpilibj.util.Units;
 // For more information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 
-public class DriveSalomPath extends SequentialCommandGroup {
+public class DriveSlalomPath extends SequentialCommandGroup {
 
     // maximum values different for every path
     private static final double MAX_VELOCITY = 0.25 / Constants.ROBOT_SCALE; // m/s
@@ -65,7 +63,7 @@ public class DriveSalomPath extends SequentialCommandGroup {
     );
     
     
-    public DriveSalomPath(Drivetrain drivetrain) {
+    public DriveSlalomPath(Drivetrain drivetrain) {
         // Add your commands in the super() call, e.g.
         // super(new FooCommand(), new BarCommand());
         super(new DrivetrainRamseteCommand(drivetrain, trajectory));
