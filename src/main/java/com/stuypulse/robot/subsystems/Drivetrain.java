@@ -74,7 +74,6 @@ public class Drivetrain extends SubsystemBase {
 
         // Field Widget
         field = new Field2d(); 
-        updateField();
     }
     
 
@@ -208,11 +207,6 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    private void updateField() {
-        field.setRobotPose(getPose());
-        SmartDashboard.putData("Field", field);
-    }
-
     @Override
     public void periodic() {
         odometry.update(
@@ -220,19 +214,26 @@ public class Drivetrain extends SubsystemBase {
             this.getLeftDistance(),
             this.getRightDistance()
         );
-        updateField();
+        
+        field.setRobotPose(getPose());
+        SmartDashboard.putData("Field", field);
     }
 
-    private void resetOdometer() {
-        odometry.resetPosition(Odometry.START, Odometry.START_ANG);
-        updateField();
+    private void resetOdometer(Pose2d startPose2d) {
+        odometry.resetPosition(startPose2d, getRotation2d());
     }
 
     // Resets all encoders / gyroscopes to 0
-    public void reset() {
+    public void reset(Pose2d startPose2d) {
         resetEncoders();
         resetGyro();
-        resetOdometer();
+
+        // Must Be Called Last
+        resetOdometer(startPose2d);
+    }
+
+    public void reset() {
+        reset(Odometry.START);
     }
 
     /*********************

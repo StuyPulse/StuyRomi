@@ -4,19 +4,15 @@
 
 package com.stuypulse.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-
+import com.stuypulse.robot.commands.DrivetrainDriveCommand;
+import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.robot.subsystems.OnBoardIO.ChannelMode;
-
-import java.io.IOException;
-
-import com.stuypulse.robot.commands.*;
-import com.stuypulse.robot.commands.autos.*;
-
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.*;
+import com.stuypulse.stuylib.input.gamepads.Xbox;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -48,20 +44,13 @@ public class RobotContainer {
     }
 
     // Autonomous Commands
-    public Command getAutonomousCommand(String file) {
-        try {
-            return new DrivetrainRamseteCommand(drivetrain, file);
-        } catch (IOException e) {
-            System.err.println("Error Opening \"" + file + "\", Reverting to DoNothingAuton()!");
-            System.out.println(e.getStackTrace());
-            return new DoNothingAuton();
-        }
-    }
-
     public Command getAutonomousCommand() {
-        return getAutonomousCommand("output/Racing Barrel 1.wpilib.json");
-
-        // return new DriveBouncePath1(drivetrain);
+        return new DrivetrainRamseteCommand(drivetrain, "output/Bounce Path 1.wpilib.json");
+        //return new DrivetrainRamseteCommand(drivetrain, "output/Bounce Path 2.wpilib.json");
+        //return new DrivetrainRamseteCommand(drivetrain, "output/Racing Barrel 1.wpilib.json");
+        //return new DriveBouncePath1(drivetrain);
+        //return new DriveBouncePath2(drivetrain);
+        //return new DriveSlalomPath(drivetrain);
     }
 
 }

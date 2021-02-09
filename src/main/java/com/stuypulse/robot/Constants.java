@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -26,7 +25,7 @@ public interface Constants {
     // This is the scale for units, this is used to make the robot simulate another
     // size
     // The romi is about 5 inches across, and edwin is about 30 inches across
-    // By setting the robot scale to 1.0 / 6.0, we can simulate a robot the size of
+    // By setting the robot scale to 1.0 / 5.0, we can simulate a robot the size of
     // edwin
     double ROBOT_SCALE = 1.0 / 5.0;
 
@@ -80,8 +79,11 @@ public interface Constants {
 
             DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
 
-            SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(FeedForward.S,
-                    FeedForward.V * ROBOT_SCALE, FeedForward.A * ROBOT_SCALE);
+            SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
+                FeedForward.S,
+                FeedForward.V * ROBOT_SCALE, 
+                FeedForward.A * ROBOT_SCALE
+            );
 
             interface FeedForward {
                 double S = 0.46;

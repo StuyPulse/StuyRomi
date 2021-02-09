@@ -7,23 +7,19 @@
 
 package com.stuypulse.robot.commands.autos;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.trajectory.*;
-import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import java.util.List;
 
 import com.stuypulse.robot.Constants;
 import com.stuypulse.robot.FieldMap;
-import com.stuypulse.robot.commands.*;
-import com.stuypulse.robot.subsystems.*;
+import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
+import com.stuypulse.robot.subsystems.Drivetrain;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  
@@ -64,8 +60,8 @@ public class DriveSlalomPath extends SequentialCommandGroup {
     
     
     public DriveSlalomPath(Drivetrain drivetrain) {
-        // Add your commands in the super() call, e.g.
-        // super(new FooCommand(), new BarCommand());
-        super(new DrivetrainRamseteCommand(drivetrain, trajectory));
+        super(
+            new DrivetrainRamseteCommand(drivetrain, trajectory).robotRelative()
+        );
     }
 }
