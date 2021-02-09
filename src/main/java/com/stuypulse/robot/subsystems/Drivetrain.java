@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.math.SLMath;
 
 import edu.wpi.first.wpilibj.geometry.*;
 
@@ -192,6 +191,14 @@ public class Drivetrain extends SubsystemBase {
      * ODOMETER FUNCTIONS *
      **********************/
 
+    private void updateOdometry() {
+        odometry.update(
+            this.getRotation2d(),
+            this.getLeftDistance(),
+            this.getRightDistance()
+        );
+    }
+
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
             getLeftVelocity(),
@@ -204,23 +211,19 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Pose2d getPose() {
+        updateOdometry();
         return odometry.getPoseMeters();
     }
 
     @Override
     public void periodic() {
-        odometry.update(
-            this.getRotation2d(),
-            this.getLeftDistance(),
-            this.getRightDistance()
-        );
-        
+        updateOdometry();
         field.setRobotPose(getPose());
         SmartDashboard.putData("Field", field);
     }
 
     private void resetOdometer(Pose2d startPose2d) {
-        odometry.resetPosition(startPose2d, getRotation2d());
+        odometry.resetPosition(startPose2d, new Rotation2d());
     }
 
     // Resets all encoders / gyroscopes to 0
@@ -266,51 +269,55 @@ public class Drivetrain extends SubsystemBase {
      * SMART DASHBOARD SENDABLE *
      ****************************/
 
-    // Rounds a double to a certain number of sigfigs to avoid clutter
-    private double round(double n) {
-        return SLMath.round(n, SENDABLE_SIGFIGS);
-    }
-
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
 
         // Odometry Functions
         // You have to call getPose() inside the lambda or else it never updates
-        builder.addStringProperty("Odometer X: ", 
-            () -> round(getPose().getX()) + "m", 
+        builder.addDoubleProperty("Odometer X (m)", 
+            () -> getPose().getX(), 
             (x) -> {});
 
-        builder.addStringProperty("Odometer Y: ", 
-            () -> round(getPose().getY()) + "m", 
+        builder.addDoubleProperty("Odometer Y (m)", 
+            () -> getPose().getY(), 
             (x) -> {});
 
-        builder.addStringProperty("Odometer Rotation: ", 
-            () -> round(getPose().getRotation().getDegrees()) + "deg", 
+        builder.addDoubleProperty("Odometer Rotation (deg)", 
+            () -> getPose().getRotation().getDegrees(), 
+            (x) -> {});
+
+        // Gyro / Encoder Angle
+        builder.addDoubleProperty("Rotation Encoder (deg)",
+            () -> getEncoderAngle().toDegrees(),
+            (x) -> {});
+
+        builder.addDoubleProperty("Rotation Gyroscope (deg)",
+            () -> getAngleYaw().toDegrees(),
             (x) -> {});
 
         // Left and Right motor functions
-        builder.addStringProperty("Distance Left: ", 
-            () -> round(getLeftDistance()) + "m", 
+        builder.addDoubleProperty("Distance Left (m)", 
+            () -> getLeftDistance(), 
             (x) -> {});
 
-        builder.addStringProperty("Distance Right: ", 
-            () -> round(getRightDistance()) + "m", 
+        builder.addDoubleProperty("Distance Right (m)", 
+            () -> getRightDistance(), 
             (x) -> {});
 
-        builder.addStringProperty("Velocity Left: ", 
-            () -> round(getLeftVelocity()) + "m", 
+        builder.addDoubleProperty("Velocity Left (m per s)", 
+            () -> getLeftVelocity(), 
             (x) -> {});
 
-        builder.addStringProperty("Velocity Right: ", 
-            () -> round(getRightVelocity()) + "m", 
+        builder.addDoubleProperty("Velocity Right (m per s)", 
+            () -> getRightVelocity(), 
             (x) -> {});
 
-        builder.addStringProperty("Voltage Left: ", 
-            () -> round(getLeftVoltage()) + "V", 
+        builder.addDoubleProperty("Voltage Left (V)", 
+            () -> getLeftVoltage(), 
             (x) -> {});
 
-        builder.addStringProperty("Voltage Right: ", 
-            () -> round(getRightVoltage()) + "V", 
+        builder.addDoubleProperty("Voltage Right (V)", 
+            () -> getRightVoltage(), 
             (x) -> {});
     }
 

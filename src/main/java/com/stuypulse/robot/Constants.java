@@ -38,7 +38,7 @@ public interface Constants {
 
     interface Drivetrain {
 
-        SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope for Angle", false);
+        SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope", false);
 
         int SENDABLE_SIGFIGS = 5;
 
@@ -81,18 +81,18 @@ public interface Constants {
 
             SimpleMotorFeedforward MOTOR_FEED_FORWARD = new SimpleMotorFeedforward(
                 FeedForward.S,
-                FeedForward.V * ROBOT_SCALE, 
-                FeedForward.A * ROBOT_SCALE
+                FeedForward.V, 
+                FeedForward.A
             );
 
             interface FeedForward {
-                double S = 0.46;
-                double V = 9.75;
-                double A = 0.0221;
+                double S = 0.376;
+                double V = 10.00 * ROBOT_SCALE;
+                double A = 0.186 * ROBOT_SCALE;
             }
 
             interface PID {
-                double P = 0.000268 * ROBOT_SCALE;
+                double P = 0.0125 * ROBOT_SCALE;
                 double I = 0 * ROBOT_SCALE;
                 double D = 0 * ROBOT_SCALE;
             }

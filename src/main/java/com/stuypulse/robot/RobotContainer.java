@@ -6,6 +6,7 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.DrivetrainDriveCommand;
 import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
+import com.stuypulse.robot.commands.autos.DriveTestPath;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.robot.subsystems.OnBoardIO.ChannelMode;
@@ -45,12 +46,14 @@ public class RobotContainer {
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        return new DrivetrainRamseteCommand(drivetrain, "output/Bounce Path 1.wpilib.json");
+        //return new DrivetrainRamseteCommand(drivetrain, "output/Bounce Path 1.wpilib.json");
         //return new DrivetrainRamseteCommand(drivetrain, "output/Bounce Path 2.wpilib.json");
         //return new DrivetrainRamseteCommand(drivetrain, "output/Racing Barrel 1.wpilib.json");
+        return new DrivetrainRamseteCommand(drivetrain, "output/SlalomPath.wpilib.json");
         //return new DriveBouncePath1(drivetrain);
         //return new DriveBouncePath2(drivetrain);
         //return new DriveSlalomPath(drivetrain);
+        //return new DriveTestPath(drivetrain);
     }
 
 }

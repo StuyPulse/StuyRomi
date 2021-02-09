@@ -10,6 +10,7 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -23,7 +24,10 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 public final class DrivetrainRamseteCommand extends RamseteCommand {
     
     private static final Trajectory DEFAULT_TRAJECTORY = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(), List.of(), new Pose2d(), new TrajectoryConfig(0, 0).setKinematics(Constants.Drivetrain.Motion.KINEMATICS));
+        new Pose2d(0, 0, new Rotation2d()), 
+        List.of(), 
+        new Pose2d(1, 0, new Rotation2d()), 
+        new TrajectoryConfig(0.1, 0.1).setKinematics(Constants.Drivetrain.Motion.KINEMATICS));
 
     // Function that gets a trajectory from path weaver, 
     // but will give a default one if it has an issue
@@ -84,8 +88,9 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
     public void initialize() {
         super.initialize();
 
-        if(resetPosition)
+        if(resetPosition) {
             drivetrain.reset(trajectory.getInitialPose());
+        }
     }
 
 }
