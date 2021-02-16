@@ -4,25 +4,23 @@
 
 package com.stuypulse.robot.subsystems;
 
+import static com.stuypulse.robot.Constants.Drivetrain.*;
+import com.stuypulse.robot.subsystems.sensors.RomiGyro;
+
+import com.stuypulse.stuylib.math.Angle;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.stuypulse.robot.subsystems.sensors.RomiGyro;
-
-import static com.stuypulse.robot.Constants.Drivetrain.*;
-
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.stuypulse.stuylib.math.Angle;
-
-import edu.wpi.first.wpilibj.geometry.*;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -52,8 +50,6 @@ public class Drivetrain extends SubsystemBase {
         rightMotor = new Spark(Ports.RIGHT_MOTOR);
 
         drivetrain = new DifferentialDrive(leftMotor, rightMotor);
-
-        drivetrain.setDeadband(DEAD_BAND);
 
         // Setup encoders
         leftEncoder = new Encoder(Ports.LEFT_ENCODER_A, Ports.LEFT_ENCODER_B);

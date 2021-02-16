@@ -9,11 +9,7 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
@@ -23,32 +19,25 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
  */
 public final class DrivetrainRamseteCommand extends RamseteCommand {
     
-    private static final Trajectory DEFAULT_TRAJECTORY = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d()), 
-        List.of(), 
-        new Pose2d(1, 0, new Rotation2d()), 
-        new TrajectoryConfig(0.1, 0.1).setKinematics(Constants.Drivetrain.Motion.KINEMATICS));
-
-    // Function that gets a trajectory from path weaver, 
-    // but will give a default one if it has an issue
+    // Load Trajectory From File
     private static Trajectory getTrajectory(String path) {
-        Trajectory trajectory = DEFAULT_TRAJECTORY;
         try {
-            trajectory = TrajectoryUtil.fromPathweaverJson(
+            return TrajectoryUtil.fromPathweaverJson(
                 Constants.DEPLOY_DIRECTORY.resolve(path)
             );
         } catch(IOException e) {
             System.err.println("Error Opening \"" + path + "\"!");
             System.out.println(e.getStackTrace());
+            return null;
         }
-
-        return trajectory;
     }
 
+    // Information stored by this command
     private boolean resetPosition;
     private Trajectory trajectory;
     private Drivetrain drivetrain;
 
+    // Setup the Ramsete Command
     public DrivetrainRamseteCommand(Drivetrain drivetrain, Trajectory trajectory) {
         super(
             trajectory,
@@ -68,8 +57,19 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
         this.drivetrain = drivetrain;
     }
 
+    // Load from file
     public DrivetrainRamseteCommand(Drivetrain drivetrain, String path) {
         this( drivetrain, getTrajectory(path) );
+    }
+
+    // Reset encoders if required
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        if(resetPosition) {
+            drivetrain.reset(trajectory.getInitialPose());
+        }
     }
 
     // [DEFAULT] Resets the drivetrain to the begining of the trajectory
@@ -83,14 +83,4 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
         this.resetPosition = false;
         return this;
     }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-
-        if(resetPosition) {
-            drivetrain.reset(trajectory.getInitialPose());
-        }
-    }
-
 }

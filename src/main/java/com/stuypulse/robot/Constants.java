@@ -46,7 +46,6 @@ public interface Constants {
         double RIGHT_VOLTAGE_MUL = -1.0;
 
         double TRACK_WIDTH = 0.141 / ROBOT_SCALE;
-        double DEAD_BAND = 0.05;
 
         interface Ports {
             int LEFT_MOTOR = 0;

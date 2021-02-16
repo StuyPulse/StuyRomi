@@ -4,6 +4,7 @@
 
 package com.stuypulse.robot.subsystems;
 
+import com.stuypulse.robot.Constants;
 import com.stuypulse.stuylib.input.buttons.ButtonWrapper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -11,8 +12,6 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.stuypulse.robot.Constants;
 
 /**
  * This class represents the onboard IO of the Romi reference robot. This
