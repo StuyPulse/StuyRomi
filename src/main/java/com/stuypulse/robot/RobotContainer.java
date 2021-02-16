@@ -10,6 +10,7 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.Xbox;
+import com.stuypulse.stuylib.network.SmartString;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -45,6 +46,8 @@ public class RobotContainer {
         onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
     }
 
+    private SmartString FILE_PATH = new SmartString("Which path?", "BouncePath/ElainesBouncePath.wpilib.json");
+
     // Autonomous Commands
     public Command getAutonomousCommand() {
         
@@ -52,7 +55,7 @@ public class RobotContainer {
 
         // return new BouncePathAuton(drivetrain);
         
-        return new SlalomPathAuton(drivetrain);
+        return new DrivetrainRamseteCommand(drivetrain, FILE_PATH.get());
 
     }
 
