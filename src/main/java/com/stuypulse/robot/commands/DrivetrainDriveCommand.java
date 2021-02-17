@@ -18,27 +18,18 @@ public class DrivetrainDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.reset();
         drivetrain.stop();
     }
      
     @Override
     public void execute() {
-        // gamepad.getRightStick().x;
-        // gamepad.getRightStick().y;
-        // gamepad.getLeftStick().x;
-        // gamepad.getLeftStick().y;
-        // gamepad.getRightTrigger();
-        // gamepad.getLeftTrigger();
-        //what does the x and y at the end do
-
-        
         drivetrain.arcadeDrive(gamepad.getRightTrigger() - gamepad.getLeftTrigger(), gamepad.getLeftStick().x);
 
     }
     
     @Override
     public void end(boolean isInterrupted) {
+        drivetrain.stop();
     }
 
     @Override

@@ -16,17 +16,17 @@ public class DrivetrainSpinCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.reset();
+        drivetrain.stop();
     }
 
     @Override
     public void execute() {
-        drivetrain.arcadeDrive(0.0, 1.0);
+        drivetrain.tankDrive(1.0, -1.0);
     }
 
     @Override
     public void end(boolean isInterrupted) {
-
+        drivetrain.stop();
     }
 
     @Override

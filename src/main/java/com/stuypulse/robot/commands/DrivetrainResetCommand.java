@@ -15,7 +15,7 @@ public class DrivetrainResetCommand extends InstantCommand {
     
     @Override
     public void initialize() {
-        drivetrain.reset();
+        drivetrain.stop();
     }
 
 }
