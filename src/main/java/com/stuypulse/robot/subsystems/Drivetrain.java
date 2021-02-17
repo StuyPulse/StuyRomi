@@ -15,9 +15,31 @@ import static com.stuypulse.robot.Constants.Drivetrain.*;
 //          - tankDrive()
 //          - arcadeDrive()
 //          - stop()
+
 public class Drivetrain extends SubsystemBase {
+    private final Spark leftMotor;
+    private final Spark rightMotor;
+
+    private final DifferentialDrive drivetrain;
 
     public Drivetrain() {
+        leftMotor = new Spark(Ports.LEFT_MOTOR);
+        rightMotor = new Spark(Ports.RIGHT_MOTOR);
+        drivetrain = new DifferentialDrive(leftMotor, rightMotor);
     }
-  
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        drivetrain.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    public void arcadeDrive(double speed, double rotation) {
+        drivetrain.arcadeDrive(speed, rotation);
+    }
+
+    public void stop() {
+        drivetrain.stopMotor();
+    }
 }
+//idk what my group did but well done
+//thank you anthony for carrying
+// HARD CARRY
