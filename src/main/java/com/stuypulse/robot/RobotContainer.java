@@ -5,10 +5,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.*;
-import com.stuypulse.robot.commands.autos.*;
 import com.stuypulse.robot.subsystems.Drivetrain;
-import com.stuypulse.robot.subsystems.OnBoardIO;
-import com.stuypulse.robot.subsystems.OnBoardIO.ChannelMode;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.Xbox;
 
@@ -28,7 +25,6 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
-    private final OnBoardIO onBoardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
     public RobotContainer() {
         configureDefaultCommands();
@@ -46,7 +42,7 @@ public class RobotContainer {
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        return new DrivetrainRamseteCommand(drivetrain, "output/SamsBouncePath.wpilib.json");
+        return null;
     }
 
 }
