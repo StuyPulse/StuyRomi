@@ -20,11 +20,6 @@ public class DrivetrainDriveCommand extends CommandBase {
         
         addRequirements(drivetrain);
     }
-
-    @Override
-    public void initialize() {
-        drivetrain.stop();
-    }
      
     @Override
     public void execute() {
@@ -36,15 +31,5 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         drivetrain.arcadeDrive(speed, turn);
 
-    }
-    
-    @Override
-    public void end(boolean isInterrupted) {
-        drivetrain.stop();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }
