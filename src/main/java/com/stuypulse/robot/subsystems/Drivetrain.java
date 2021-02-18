@@ -17,7 +17,27 @@ import static com.stuypulse.robot.Constants.Drivetrain.*;
 //          - stop()
 public class Drivetrain extends SubsystemBase {
 
+    private Spark leftMotor;
+    private Spark rightMotor;
+    private final DifferentialDrive drivetrain;
+    
     public Drivetrain() {
+        leftMotor = new Spark(Ports.LEFT_MOTOR);
+        rightMotor = new Spark(Ports.RIGHT_MOTOR);
+
+        drivetrain = new DifferentialDrive(leftMotor, rightMotor);
     }
-  
+    
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        drivetrain.tankDrive(leftSpeed, rightSpeed, false);
+    }
+    
+    public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
+        drivetrain.arcadeDrive(xaxisSpeed, zaxisRotate, false);
+    }
+    
+    public void stop() {
+        drivetrain.stopMotor();
+    }
+
 }
