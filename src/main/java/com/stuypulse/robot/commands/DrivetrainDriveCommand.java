@@ -20,12 +20,23 @@ public class DrivetrainDriveCommand extends CommandBase {
         
         addRequirements(drivetrain);
     }
-     
+    private IFilter filter = new IFilterGroup(
+new LowPassFilter(0.4),
+
+new MovingAverage(10),
+
+new SpeedProfile(3),
+
+new MedianFilter(7)
+    );
+    private IFilter filter2 = new TimedMovingAverage(0.2);
     @Override
     public void execute() {
 
         double speed = gamepad.getRightTrigger() - gamepad.getLeftTrigger();
+        speed = filter.get(speed);
         double turn = gamepad.getLeftStick().x;
+        turn = filter2.get(turn);
 
         // TODO: Filter these values sending them to the drivetrain
 
