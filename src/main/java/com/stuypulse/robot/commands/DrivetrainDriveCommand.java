@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands;
 
 import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -20,20 +21,17 @@ public class DrivetrainDriveCommand extends CommandBase {
         new MovingAverage(10)
     );
 
+    private final IFilter filter2 = new IFilterGroup (
+        (x) -> SLMath.square(x),
+        new LowPassFilter(0.7),
+        new MovingAverage(10)
+    );
+
     public DrivetrainDriveCommand(Drivetrain drivetrain, Gamepad gamepad) {
         this.drivetrain = drivetrain;
         this.gamepad = gamepad;
         
         addRequirements(drivetrain);
-    }
-
-    @Override
-    public void initalize() {
-        filter = new IFilterGroup (
-            (x) -> SLMath.square(x),
-            new LowPassFilter(0.7),
-            new MovingAverage(10)
-        );
     }
 
     @Override
@@ -44,6 +42,6 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         // TODO: Filter these values sending them to the drivetrain
 
-        drivetrain.arcadeDrive(filter.get(speed), filter.get(turn));
+        drivetrain.arcadeDrive(filter.get(speed), filter2.get(turn));
     }
 }
