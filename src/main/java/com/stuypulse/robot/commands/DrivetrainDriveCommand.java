@@ -22,6 +22,7 @@ public class DrivetrainDriveCommand extends CommandBase {
     }
     
     IFilter filter = new IFilterGroup(new LowPassFilter(0.5));
+    IFilter filter2 = new IFilterGroup(new LowPassFilter(0.5));
 
     
     public void execute() {
@@ -32,10 +33,10 @@ public class DrivetrainDriveCommand extends CommandBase {
         // TODO: Filter these values sending them to the drivetrain
         
         speed = filter.get(speed); 
+        turn = filter2.get(turn);
         
         drivetrain.arcadeDrive(speed, turn);
         
-        turn = filter.get(turn);
     } 
 }
 /*  
