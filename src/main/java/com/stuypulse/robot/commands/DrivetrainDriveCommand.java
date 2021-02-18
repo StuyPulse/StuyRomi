@@ -14,7 +14,8 @@ public class DrivetrainDriveCommand extends CommandBase {
     
     private final Drivetrain drivetrain; 
     private final Gamepad gamepad;
-    private IFilterGroup filterGroup;
+    private IFilterGroup filterGroupSpeed;
+    private IFilterGroup filterGroupTurn;
 
     
     public DrivetrainDriveCommand(Drivetrain drivetrain, Gamepad gamepad) {
@@ -23,9 +24,12 @@ public class DrivetrainDriveCommand extends CommandBase {
         
         addRequirements(drivetrain);
 
-        filterGroup = new IFilterGroup(new IFilter[] {
+        /*
+        We were bored
+        */
+        filterGroupSpeed = new IFilterGroup(
             new ExpMovingAverage(2),
-            new HighPassFilter(0.21),
+            // new HighPassFilter(0.21),
             new LowPassFilter(3),
             new MovingAverage(5),
             new ExpMovingAverage(4),
@@ -33,7 +37,18 @@ public class DrivetrainDriveCommand extends CommandBase {
             new LowPassFilter(0.2),
             new SpeedProfile(1),
             new TimedMovingAverage(5)
-        });
+        );
+        filterGroupTurn = new IFilterGroup(
+            new ExpMovingAverage(2),
+            // new HighPassFilter(0.21),
+            new LowPassFilter(3),
+            new MovingAverage(5),
+            new ExpMovingAverage(4),
+            new ExpMovingAverage(4),
+            new LowPassFilter(0.2),
+            new SpeedProfile(1),
+            new TimedMovingAverage(5)
+        );
     }
      
     @Override
@@ -44,7 +59,7 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         // TODO: Filter these values sending them to the drivetrain
 
-        drivetrain.arcadeDrive(filterGroup.get(speed), filterGroup.get(turn));
+        drivetrain.arcadeDrive(filterGroupSpeed.get(speed), filterGroupTurn.get(turn));
 
     }
 }
