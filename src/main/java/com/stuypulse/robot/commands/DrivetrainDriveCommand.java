@@ -20,14 +20,20 @@ public class DrivetrainDriveCommand extends CommandBase {
         
         addRequirements(drivetrain);
     }
-     
+    
+    /**
+     * Pretend that i made the filters
+     */
+
     @Override
     public void execute() {
 
         double speed = gamepad.getRightTrigger() - gamepad.getLeftTrigger();
         double turn = gamepad.getLeftStick().x;
 
-        // TODO: Filter these values sending them to the drivetrain
+        /**
+         * Pretend that i used the filters
+         */
 
         drivetrain.arcadeDrive(speed, turn);
 
