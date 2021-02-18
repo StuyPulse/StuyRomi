@@ -1,6 +1,9 @@
 package com.stuypulse.robot.commands;
 
 import com.stuypulse.stuylib.input.Gamepad;
+
+import java.security.DrbgParameters.NextBytes;
+
 import com.stuypulse.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -13,12 +16,36 @@ public class DrivetrainDriveCommand extends CommandBase {
     
     private final Drivetrain drivetrain; 
     private final Gamepad gamepad;
+    private IFilter filterspeed = new IFilterGroup(
+        //Lowpass filter: 
+        new LowPassFilter(0.3),
+
+        //Moving average filter:
+        new MovingAverage(30), 
+        
+        //RateLimit filter:
+        new RateLimit(10)
+
+    );
+    private IFilter filterturn = new IFilterGroup(
+        //Lowpass filter: 
+        new LowPassFilter(0.3),
+
+        //Moving average filter:
+        new MovingAverage(30), 
+        
+        //RateLimit filter:
+        new RateLimit(10)
+        
+    );
     
+
     public DrivetrainDriveCommand(Drivetrain drivetrain, Gamepad gamepad) {
         this.drivetrain = drivetrain;
         this.gamepad = gamepad;
         
         addRequirements(drivetrain);
+        
     }
      
     @Override
@@ -28,8 +55,10 @@ public class DrivetrainDriveCommand extends CommandBase {
         double turn = gamepad.getLeftStick().x;
 
         // TODO: Filter these values sending them to the drivetrain
+        
+        
+        drivetrain.arcadeDrive(filterspeed.get(speed), filterturn.get(turn));
 
-        drivetrain.arcadeDrive(speed, turn);
-
+        
     }
 }
