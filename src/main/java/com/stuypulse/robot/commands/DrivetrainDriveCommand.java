@@ -2,6 +2,7 @@ package com.stuypulse.robot.commands;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.robot.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 // TODO: Find out what we can use from here
@@ -13,12 +14,26 @@ public class DrivetrainDriveCommand extends CommandBase {
     
     private final Drivetrain drivetrain; 
     private final Gamepad gamepad;
+    private IFilterGroup filterGroup;
+
     
     public DrivetrainDriveCommand(Drivetrain drivetrain, Gamepad gamepad) {
         this.drivetrain = drivetrain;
         this.gamepad = gamepad;
         
         addRequirements(drivetrain);
+
+        filterGroup = new IFilterGroup(new IFilter[] {
+            new ExpMovingAverage(2),
+            new HighPassFilter(0.21),
+            new LowPassFilter(3),
+            new MovingAverage(5),
+            new ExpMovingAverage(4),
+            new ExpMovingAverage(4),
+            new LowPassFilter(0.2),
+            new SpeedProfile(1),
+            new TimedMovingAverage(5)
+        });
     }
      
     @Override
@@ -29,7 +44,7 @@ public class DrivetrainDriveCommand extends CommandBase {
 
         // TODO: Filter these values sending them to the drivetrain
 
-        drivetrain.arcadeDrive(speed, turn);
+        drivetrain.arcadeDrive(filterGroup.get(speed), filterGroup.get(turn));
 
     }
 }
