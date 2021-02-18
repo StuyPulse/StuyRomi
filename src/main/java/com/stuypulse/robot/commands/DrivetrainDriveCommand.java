@@ -13,6 +13,17 @@ public class DrivetrainDriveCommand extends CommandBase {
     
     private final Drivetrain drivetrain; 
     private final Gamepad gamepad;
+    // private IFilter filter = new LowPassFilter(0.5);
+    
+    private IFilter speedFilter = new IFilterGroup (
+        new LowPassFilter (0.2),
+        new TimedMovingAverage(3)
+    );
+
+    private IFilter turnFilter = new IFilterGroup (
+        new LowPassFilter(0.4),
+        new TimedMovingAverage(5)
+    );
     
     public DrivetrainDriveCommand(Drivetrain drivetrain, Gamepad gamepad) {
         this.drivetrain = drivetrain;
@@ -24,8 +35,8 @@ public class DrivetrainDriveCommand extends CommandBase {
     @Override
     public void execute() {
 
-        double speed = gamepad.getRightTrigger() - gamepad.getLeftTrigger();
-        double turn = gamepad.getLeftStick().x;
+        double speed = speedFilter.get(gamepad.getRightTrigger() - gamepad.getLeftTrigger());
+        double turn = turnFilter.get(gamepad.getLeftStick().x);
 
         // TODO: Filter these values sending them to the drivetrain
 
