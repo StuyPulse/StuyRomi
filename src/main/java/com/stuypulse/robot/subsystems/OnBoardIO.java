@@ -5,13 +5,13 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.Constants;
-import com.stuypulse.stuylib.input.buttons.ButtonWrapper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * This class represents the onboard IO of the Romi reference robot. This
@@ -93,18 +93,18 @@ public class OnBoardIO extends SubsystemBase {
     }
 
     /** Get button class for the onboard A button */
-    public ButtonWrapper getButtonA() {
-        return new ButtonWrapper(this::getButtonAPressed);
+    public Button getButtonA() {
+        return new Button(this::getButtonAPressed);
     }
 
     /** Get button class for the onboard B button */
-    public ButtonWrapper getButtonB() {
-        return new ButtonWrapper(this::getButtonBPressed);
+    public Button getButtonB() {
+        return new Button(this::getButtonBPressed);
     }
     
     /** Get button class for the onboard C button */
-    public ButtonWrapper getButtonC() {
-        return new ButtonWrapper(this::getButtonCPressed);
+    public Button getButtonC() {
+        return new Button(this::getButtonCPressed);
     }
 
     /** Sets the green LED. */

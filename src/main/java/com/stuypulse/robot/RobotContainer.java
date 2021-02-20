@@ -52,8 +52,9 @@ public class RobotContainer {
 
         // return new BouncePathAuton(drivetrain);
         
-        return new SlalomPathAuton(drivetrain);
+        // return new SlalomPathAuton(drivetrain);
 
+        return new DoNothingAuton();
     }
 
 }
