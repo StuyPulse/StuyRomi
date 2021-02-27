@@ -33,7 +33,7 @@ public class Drivetrain extends SubsystemBase {
     // Encoders
     private final Encoder leftEncoder;
     private final Encoder rightEncoder;
-    
+
     // Sensors
     private final RomiGyro gyro;
 
@@ -41,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
 
     // Field Widget
-    private Field2d field; 
+    private Field2d field;
 
     public Drivetrain() {
 
@@ -68,9 +68,8 @@ public class Drivetrain extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(Odometry.START_ANG, Odometry.START);
 
         // Field Widget
-        field = new Field2d(); 
+        field = new Field2d();
     }
-    
 
     /*********************
      * VOLTAGE FUNCTIONS *
@@ -83,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Gets the last set voltage for left motor
     public double getLeftVoltage() {
-        // We divide by the voltage multiplier here because 
+        // We divide by the voltage multiplier here because
         // we multiply by it when setting the motor
         return (getBatteryVoltage() * leftMotor.get()) / LEFT_VOLTAGE_MUL;
     }
@@ -93,7 +92,6 @@ public class Drivetrain extends SubsystemBase {
         return (getBatteryVoltage() * rightMotor.get()) / RIGHT_VOLTAGE_MUL;
     }
 
-    
     /*********************
      * ENCODER FUNCTIONS *
      *********************/
@@ -144,7 +142,7 @@ public class Drivetrain extends SubsystemBase {
     // Angle of the robot based on the difference in encoder values
     public Angle getEncoderAngle() {
         double diffMeters = getRightDistance() - getLeftDistance();
-        return Angle.fromRadians(diffMeters / TRACK_WIDTH); 
+        return Angle.fromRadians(diffMeters / TRACK_WIDTH);
     }
 
     /** Reset **/
@@ -152,7 +150,6 @@ public class Drivetrain extends SubsystemBase {
         leftEncoder.reset();
         rightEncoder.reset();
     }
-
 
     /******************
      * GYRO FUNCTIONS *
@@ -171,7 +168,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Angle getAngle() {
-        if(USE_GYROSCOPE.get()) {
+        if (USE_GYROSCOPE.get()) {
             return getAngleYaw();
         } else {
             return getEncoderAngle();
@@ -182,24 +179,16 @@ public class Drivetrain extends SubsystemBase {
         gyro.reset();
     }
 
-
     /**********************
      * ODOMETER FUNCTIONS *
      **********************/
 
     private void updateOdometry() {
-        odometry.update(
-            this.getRotation2d(),
-            this.getLeftDistance(),
-            this.getRightDistance()
-        );
+        odometry.update(this.getRotation2d(), this.getLeftDistance(), this.getRightDistance());
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(
-            getLeftVelocity(),
-            getRightVelocity()
-        );
+        return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
     }
 
     public Rotation2d getRotation2d() {
@@ -270,51 +259,40 @@ public class Drivetrain extends SubsystemBase {
 
         // Odometry Functions
         // You have to call getPose() inside the lambda or else it never updates
-        builder.addDoubleProperty("Odometer X (m)", 
-            () -> getPose().getX(), 
-            (x) -> {});
+        builder.addDoubleProperty("Odometer X (m)", () -> getPose().getX(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Odometer Y (m)", 
-            () -> getPose().getY(), 
-            (x) -> {});
+        builder.addDoubleProperty("Odometer Y (m)", () -> getPose().getY(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Odometer Rotation (deg)", 
-            () -> getPose().getRotation().getDegrees(), 
-            (x) -> {});
+        builder.addDoubleProperty("Odometer Rotation (deg)", () -> getPose().getRotation().getDegrees(), (x) -> {
+        });
 
         // Gyro / Encoder Angle
-        builder.addDoubleProperty("Rotation Encoder (deg)",
-            () -> getEncoderAngle().toDegrees(),
-            (x) -> {});
+        builder.addDoubleProperty("Rotation Encoder (deg)", () -> getEncoderAngle().toDegrees(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Rotation Gyroscope (deg)",
-            () -> getAngleYaw().toDegrees(),
-            (x) -> {});
+        builder.addDoubleProperty("Rotation Gyroscope (deg)", () -> getAngleYaw().toDegrees(), (x) -> {
+        });
 
         // Left and Right motor functions
-        builder.addDoubleProperty("Distance Left (m)", 
-            () -> getLeftDistance(), 
-            (x) -> {});
+        builder.addDoubleProperty("Distance Left (m)", () -> getLeftDistance(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Distance Right (m)", 
-            () -> getRightDistance(), 
-            (x) -> {});
+        builder.addDoubleProperty("Distance Right (m)", () -> getRightDistance(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Velocity Left (m per s)", 
-            () -> getLeftVelocity(), 
-            (x) -> {});
+        builder.addDoubleProperty("Velocity Left (m per s)", () -> getLeftVelocity(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Velocity Right (m per s)", 
-            () -> getRightVelocity(), 
-            (x) -> {});
+        builder.addDoubleProperty("Velocity Right (m per s)", () -> getRightVelocity(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Voltage Left (V)", 
-            () -> getLeftVoltage(), 
-            (x) -> {});
+        builder.addDoubleProperty("Voltage Left (V)", () -> getLeftVoltage(), (x) -> {
+        });
 
-        builder.addDoubleProperty("Voltage Right (V)", 
-            () -> getRightVoltage(), 
-            (x) -> {});
+        builder.addDoubleProperty("Voltage Right (V)", () -> getRightVoltage(), (x) -> {
+        });
     }
 
 }

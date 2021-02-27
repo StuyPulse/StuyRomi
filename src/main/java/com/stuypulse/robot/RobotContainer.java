@@ -39,7 +39,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        driver.getBottomButton().whileHeld(new DrivetrainSpinCommand(drivetrain));
+        driver.getBottomButton().whileHeld(new DrivetrainAlignCommand(drivetrain));
         driver.getRightButton().whenPressed(new DrivetrainResetCommand(drivetrain));
 
         onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
@@ -47,11 +47,11 @@ public class RobotContainer {
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        
+
         // return new BarrelRacingAuton(drivetrain);
 
         return new BouncePathAuton(drivetrain);
-        
+
         // return new SlalomPathAuton(drivetrain);
 
         // return new DoNothingAuton();
