@@ -14,6 +14,118 @@ import numpy as np
 from cscore import CameraServer, VideoSource, UsbCamera, MjpegServer
 from networktables import NetworkTablesInstance
 
+def map_value(value, o_min, o_max, n_min, n_max):
+    value -= o_min
+    value /= (o_max - o_min)
+    value *= (n_max - n_min)
+    value += n_min
+
+    return value
+
+class Limelight:
+
+    def __init__(self, table_name = "limelight"):
+        # Constants (get this from elsewhere)
+        # Create a Limelight constants
+        self.MAX_ANGLE_X = +27.5
+        self.MIN_ANGLE_X = -27.5
+        self.MAX_ANGLE_Y = +21.0 
+        self.MIN_ANGLE_Y = -21.0
+
+        # Network Table Instance
+        ntinst = NetworkTablesInstance.getDefault()
+
+        # Limeliht specific network stuff
+        self.table = ntinst.getTable(table_name)
+
+        # Standard Limelight Protocol
+        self.tx = self.table.getEntry("tx")
+        self.ty = self.table.getEntry("ty")
+
+        # TODO: add more standard limelight info
+
+        # Additional Limelight Info (ROMI / OpenCV specific)
+        self.min_hue = self.table.getEntry("MIN_HUE")
+        self.min_sat = self.table.getEntry("MIN_SAT")
+        self.min_val = self.table.getEntry("MIN_VAL")
+        self.max_hue = self.table.getEntry("MAX_HUE")
+        self.max_sat = self.table.getEntry("MAX_SAT")
+        self.max_val = self.table.getEntry("MAX_VAL")
+
+        self.min_hue.setNumber(0)
+        self.min_sat.setNumber(0)
+        self.min_val.setNumber(128)
+        self.max_hue.setNumber(360)
+        self.max_sat.setNumber(255)
+        self.max_val.setNumber(255)
+
+        ######
+
+    def min_threshold(self):
+        return self.min_hue.getNumber(0), self.min_sat.getNumber(0), self.min_val.getNumber(0)
+
+    def max_threshold(self):
+        return self.max_hue.getNumber(0), self.max_sat.getNumber(0), self.max_val.getNumber(0)
+
+    def largest_contour(self, contours):
+        if len(contours) > 0:
+            return None
+        
+        largest = contours[0]
+
+        for contour in contours:
+            if cv2.contourArea(contour) > cv2.contourArea(largest):
+                    largest = contour
+
+        return largest
+
+    def calculate(self, image, contour):
+        width = image.shape[0]
+        height = image.shape[1]
+
+        # get the contour as a rectangle
+        rect = cv2.minAreaRect(contour)
+        center, _, _ = rect
+        center_x, center_y = center
+
+        # fix center_y
+        center_y = HEIGHT - center_y
+
+        # normalize center_x, center_y into a (fake) angle
+        angle_x = map_value(center_x, 0, width, self.MIN_ANGLE_X, self.MAX_ANGLE_X)
+        angle_y = map_value(center_y, 0, height, self.MIN_ANGLE_Y, self.MAX_ANGLE_Y)
+
+        return angle_x, angle_y
+
+    def handle(self, image):
+        # Convert to an hsv image so that thresholding can be done 
+        hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        binary_img = cv2.inRange(hsv_img, self.min_threshold(), self.max_threshold())
+
+        # Find all the contours
+        _, contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # set default angles
+        largest = self.largest_contour(contours)
+        angle_x, angle_y = 0, 0
+
+        # create output image
+        processed_img = binary_img.copy()
+
+        if largest == None:
+            processed_img = cv2.drawContours(processed_img, [largest], 0, (0,255,0), 3)
+
+            # convert the contour to a rectangle to angles
+            angle_x, angle_y = self.calculate(image, largest)
+
+        # update values
+        self.tx.setNumber(angle_x)
+        self.ty.setNumber(angle_y)
+
+        # return the processed image
+        return processed_img
+#######
+
 #   JSON format:
 #   {
 #       "team": <team number>,
@@ -208,13 +320,13 @@ def startSwitchedCamera(config):
 
     return server
 
-def map_value(value, o_min, o_max, n_min, n_max):
-    value -= o_min
-    value /= (o_max - o_min)
-    value *= (n_max - n_min)
-    value += n_min
+# def map_value(value, o_min, o_max, n_min, n_max):
+#     value -= o_min
+#     value /= (o_max - o_min)
+#     value *= (n_max - n_min)
+#     value += n_min
 
-    return value
+#     return value
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
@@ -241,92 +353,33 @@ if __name__ == "__main__":
     # start switched cameras
     for config in switchedCameraConfigs:
         startSwitchedCamera(config)
-
-    limelight_table = ntinst.getTable("limelight")
-    limelight_tx = limelight_table.getEntry("tx")
-    limelight_ty = limelight_table.getEntry("ty")
-
-    
-    limelight_min_hue = limelight_table.getEntry("MIN_HUE")
-    limelight_min_sat = limelight_table.getEntry("MIN_SAT")
-    limelight_min_val = limelight_table.getEntry("MIN_VAL")
-    limelight_max_hue = limelight_table.getEntry("MAX_HUE")
-    limelight_max_sat = limelight_table.getEntry("MAX_SAT")
-    limelight_max_val = limelight_table.getEntry("MAX_VAL")
-
-    limelight_min_hue.setNumber(0)
-    limelight_min_sat.setNumber(0)
-    limelight_min_val.setNumber(128)
-    limelight_max_hue.setNumber(360)
-    limelight_max_sat.setNumber(255)
-    limelight_max_val.setNumber(255)
     
     cs = CameraServer.getInstance()
 
     # constants
     WIDTH, HEIGHT = 320, 240
-    MAX_ANGLE_X = +27.5
-    MIN_ANGLE_X = -27.5
-    
-    MAX_ANGLE_Y = +21.0 
-    MIN_ANGLE_Y = -21.0
+    image = np.ndarray(shape=(WIDTH, HEIGHT, 3), dtype=np.uint8)
 
-    output = cs.putVideo("Processed Logi", WIDTH, HEIGHT)
     sink = cs.getVideo(name="Logi")
+    output = cs.putVideo("Processed Logi", WIDTH, HEIGHT)
 
+    # We might want to consider passing in some sort of Camera struct 
+    # to the limelight so that it can update on its own
+    limelight = Limelight()
+    # limelight = Limelight("table_name")
 
-    input_img = np.ndarray(shape=(WIDTH, HEIGHT, 3), dtype=np.uint8)
-     
     # loop forever
     while True:
         sleep(1.0 / 24.0)
-
-        time, input_img = sink.grabFrame(input_img)
+        time, image = sink.grabFrame(image)
 
         if time == 0: # There is an error
             continue
+
+        # create the processed image and update the limelight
+        processed = limelight.handle(image)
+
+        # Display the processed image
+        output.putFrame(limelight.handle(image))
         
-        min_thresholds = (limelight_min_hue.getNumber(0), limelight_min_sat.getNumber(0), limelight_min_val.getNumber(0))
-        max_thresholds = (limelight_max_hue.getNumber(0), limelight_max_sat.getNumber(0), limelight_max_val.getNumber(0))
-
-        # conver to hsv to threshold, and then get a thresholded binary image
-        hsv_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
-        binary_img = cv2.inRange(hsv_img, min_thresholds, max_thresholds)
-
-        # find ALL the contours with the binary image
-        _, contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        
-        # create a processed image
-        processed_img = binary_img.copy()
-        
-        # find the largest contour
-        if len(contours) > 0:
-            largest = contours[0]
-            
-            for contour in contours:
-                if cv2.contourArea(contour) > cv2.contourArea(largest):
-                    largest = contour
-
-            # if there is a contour, draw the largest one
-            processed_img = cv2.drawContours(processed_img, [largest], 0, (0,255,0), 3)
-            
-            # convert the contour to a rectangle to angles
-            rect = cv2.minAreaRect(largest)
-            center, _, _ = rect
-            center_x, center_y = center
-
-            # fix center_y
-            center_y = HEIGHT - center_y
-
-            # normalize center_x, center_y into a (fake) angle
-            angle_x = map_value(center_x, 0, WIDTH, MIN_ANGLE_X, MAX_ANGLE_X)
-            angle_y = map_value(center_y, 0, HEIGHT, MIN_ANGLE_Y, MAX_ANGLE_Y)
-
-            limelight_tx.setNumber(angle_x)
-            limelight_ty.setNumber(angle_y)
-        else:
-            limelight_tx.setNumber(0)
-            limelight_ty.setNumber(0)
-        # draw the original image with the contour
-        output.putFrame(processed_img)
 
