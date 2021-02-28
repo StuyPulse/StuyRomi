@@ -22,9 +22,72 @@ def map_value(value, o_min, o_max, n_min, n_max):
 
     return value
 
+class Camera:
+    
+    def __init__(self, sink, width, height):
+        self.sink = sink
+        self.width = width
+        self.height = height
+
+        self.image = np.ndarray(shape=(WIDTH, HEIGHT, 3), dtype=np.uint8)
+
+    def grabFrame(self):
+        time, self.image = self.sink.grabFrame(self.image)
+
+        if time == 0:
+            return None
+        else:
+            return self.image
+
 class Limelight:
 
-    def __init__(self, table_name = "limelight"):
+    def update(self):
+        """ 
+            Get image from the camera and put the processed image to the output. 
+            Do this while updating the limelight's values
+        """
+        image = self.camera.grabFrame()
+
+        if image != None:
+            # create the processed image and update the limelight
+            processed = limelight.handle(image)
+
+            #Display the processed image
+            self.output.putFrame(processed)
+
+    def handle(self, image):
+        # Convert to an hsv image so that thresholding can be done 
+        hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        binary_img = cv2.inRange(hsv_img, self.min_threshold(), self.max_threshold())
+
+        # Find all the contours
+        _, contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # set default angles
+        largest = self.largest_contour(contours)
+        angle_x, angle_y = 0, 0
+
+        # create output image
+        processed_img = binary_img.copy()
+
+        if largest == None:
+            processed_img = cv2.drawContours(processed_img, [largest], 0, (0,255,0), 3)
+
+            # convert the contour to a rectangle to angles
+            angle_x, angle_y = self.calculate(image, largest)
+
+        # update values
+        self.tx.setNumber(angle_x)
+        self.ty.setNumber(angle_y)
+
+        # return the processed image
+        return processed_img
+
+    def __init__(self, in_camera, out_video, table_name = "limelight"):
+        # Video I/O
+        self.camera = in_camera
+        self.output = out_video
+
         # Constants (get this from elsewhere)
         # Create a Limelight constants
         self.MAX_ANGLE_X = +27.5
@@ -97,33 +160,6 @@ class Limelight:
 
         return angle_x, angle_y
 
-    def handle(self, image):
-        # Convert to an hsv image so that thresholding can be done 
-        hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        binary_img = cv2.inRange(hsv_img, self.min_threshold(), self.max_threshold())
-
-        # Find all the contours
-        _, contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        # set default angles
-        largest = self.largest_contour(contours)
-        angle_x, angle_y = 0, 0
-
-        # create output image
-        processed_img = binary_img.copy()
-
-        if largest == None:
-            processed_img = cv2.drawContours(processed_img, [largest], 0, (0,255,0), 3)
-
-            # convert the contour to a rectangle to angles
-            angle_x, angle_y = self.calculate(image, largest)
-
-        # update values
-        self.tx.setNumber(angle_x)
-        self.ty.setNumber(angle_y)
-
-        # return the processed image
-        return processed_img
 #######
 
 #   JSON format:
@@ -358,28 +394,25 @@ if __name__ == "__main__":
 
     # constants
     WIDTH, HEIGHT = 320, 240
-    image = np.ndarray(shape=(WIDTH, HEIGHT, 3), dtype=np.uint8)
 
-    sink = cs.getVideo(name="Logi")
-    output = cs.putVideo("Processed Logi", WIDTH, HEIGHT)
+    in_camera = Camera(cs.getVideo(name="Logi"), WIDTH, HEIGHT)
+    out_video = cs.putVideo("Processed Logi", WIDTH, HEIGHT)
 
-    # We might want to consider passing in some sort of Camera struct 
-    # to the limelight so that it can update on its own
-    limelight = Limelight()
-    # limelight = Limelight("table_name")
+    limelight = Limelight(in_camera, out_video)
 
     # loop forever
     while True:
         sleep(1.0 / 24.0)
-        time, image = sink.grabFrame(image)
+        limelight.update()
 
-        if time == 0: # There is an error
-            continue
+    # OR
 
-        # create the processed image and update the limelight
-        processed = limelight.handle(image)
+    # while True:
+    #     image = in_camera.grabFrame()
+    #     if image == None:
+    #         continue
 
-        # Display the processed image
-        output.putFrame(limelight.handle(image))
-        
+    #     processed = limelight.handle(image)
+
+    #     out_video.putFrame(processed)
 
