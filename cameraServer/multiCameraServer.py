@@ -50,17 +50,24 @@ class Limelight:
 
         if image != None:
             # create the processed image and update the limelight
-            processed = limelight.handle(image)
+            processed = self.handle(image)
 
             #Display the processed image
             self.output.putFrame(processed)
 
     def handle(self, image):
+        """
+            Update the limelight's data by using an image as input.
+            
+            Does this by finding contours in the image and then doing 
+            calculations on the largest contour.
+        """
         # Convert to an hsv image so that thresholding can be done 
         hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         binary_img = cv2.inRange(hsv_img, self.min_threshold(), self.max_threshold())
 
         # Find all the contours
+        # TODO: there should be a better way to find contours
         _, contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # set default angles
@@ -143,6 +150,7 @@ class Limelight:
         return largest
 
     def calculate(self, image, contour):
+        # TODO: This should be replaced with a more sound algoritm
         width = image.shape[0]
         height = image.shape[1]
 
