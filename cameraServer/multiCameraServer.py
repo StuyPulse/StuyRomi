@@ -10,6 +10,7 @@ import sys
 
 import cv2
 import numpy as np
+import math
 
 from cscore import CameraServer, VideoSource, UsbCamera, MjpegServer
 from networktables import NetworkTablesInstance
@@ -49,6 +50,8 @@ class Limelight:
         image = self.camera.grabFrame()
 
         if image != None:
+            # TODO: drawing the contour doesn't seem to work
+
             # create the processed image and update the limelight
             processed = self.handle(image)
 
@@ -97,10 +100,8 @@ class Limelight:
 
         # Constants (get this from elsewhere)
         # Create a Limelight constants
-        self.MAX_ANGLE_X = +27.5
-        self.MIN_ANGLE_X = -27.5
-        self.MAX_ANGLE_Y = +21.0 
-        self.MIN_ANGLE_Y = -21.0
+        self.horizontal_fov = 54
+        self.vertical_fov = 42
 
         # Network Table Instance
         ntinst = NetworkTablesInstance.getDefault()
@@ -149,24 +150,52 @@ class Limelight:
 
         return largest
 
+    # def calculate(self, image, contour):
+    #     # TODO: This should be replaced with a more sound algoritm
+    #     width = image.shape[0]
+    #     height = image.shape[1]
+    #     # get the contour as a rectangle
+    #     rect = cv2.minAreaRect(contour)
+    #     center, _, _ = rect
+    #     center_x, center_y = center
+
+    #     # fix center_y
+    #     center_y = HEIGHT - center_y
+
+    #     # normalize center_x, center_y into a (fake) angle
+    #     angle_x = map_value(center_x, 0, width, -self.horizontal_fov / 2, self.horizontal_fov / 2)
+    #     angle_y = map_value(center_y, 0, height, -self.vertical_fov / 2, self.vertical_fov / 2)
+
+    #     return angle_x, angle_y
+
     def calculate(self, image, contour):
-        # TODO: This should be replaced with a more sound algoritm
-        width = image.shape[0]
-        height = image.shape[1]
-
-        # get the contour as a rectangle
-        rect = cv2.minAreaRect(contour)
+        # Get a pixel that represents the contour
+        rect = cv2.minAreaRect(contour) # <-- there seems to be an angle in here that could be useful
         center, _, _ = rect
-        center_x, center_y = center
+        px, py = center
 
-        # fix center_y
-        center_y = HEIGHT - center_y
+        # Normalize coordinates
+        hw = self.camera.width / 2
+        hh = self.camera.height / 2
 
-        # normalize center_x, center_y into a (fake) angle
-        angle_x = map_value(center_x, 0, width, self.MIN_ANGLE_X, self.MAX_ANGLE_X)
-        angle_y = map_value(center_y, 0, height, self.MIN_ANGLE_Y, self.MAX_ANGLE_Y)
+        nx = (1 / hw) * (px - (hw - 0.5))
+        ny = (1 / hh) * ((hh - 0.5) - py)
+
+        # Calculate the size of the view plane
+        vpw = 2 * math.tan(self.horizontal_fov / 2)
+        vph = 2 * math.tan(self.vertical_fov / 2)
+        
+        # Using the view plane size, convert the coordinates
+        # into the view plance screen space
+        x = vpw / 2 * nx
+        y = vph / 2 * ny
+
+        angle_x = math.atan2(1, x)
+        angle_y = math.atan2(1, y)
 
         return angle_x, angle_y
+
+
 
 #######
 
