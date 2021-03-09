@@ -22,16 +22,20 @@ import edu.wpi.first.wpilibj2.command.button.Button;
  * DIO 2 - Button C (input) or Red LED (output) DIO 3 - Yellow LED (output only)
  */
 public class OnBoardIO extends SubsystemBase {
-    private final DigitalInput buttonA = new DigitalInput(0);
-    private final DigitalOutput yellowLED = new DigitalOutput(3);
+    
+    // DIO 0
+    private final DigitalInput buttonA;
 
     // DIO 1
-    private DigitalInput buttonB;
-    private DigitalOutput greenLED;
+    private final DigitalInput buttonB;
+    private final DigitalOutput greenLED;
 
     // DIO 2
-    private DigitalInput buttonC;
-    private DigitalOutput redLED;
+    private final DigitalInput buttonC;
+    private final DigitalOutput redLED;
+
+    // DIO 3
+    private final DigitalOutput yellowLED;
 
     private double nextMessageTime;
 
@@ -46,17 +50,31 @@ public class OnBoardIO extends SubsystemBase {
      * @param dio2 Mode for DIO 2 (input = Button C, output = red LED)
      */
     public OnBoardIO(ChannelMode dio1, ChannelMode dio2) {
+        buttonA = new DigitalInput(0);
+        addChild("Button A", buttonA);
+
         if (dio1 == ChannelMode.INPUT) {
+            greenLED = null;
             buttonB = new DigitalInput(1);
+            addChild("Button B", buttonB);
         } else {
+            buttonB = null;
             greenLED = new DigitalOutput(1);
+            addChild("Green LED", greenLED);
         }
 
         if (dio2 == ChannelMode.INPUT) {
+            redLED = null;
             buttonC = new DigitalInput(2);
+            addChild("Button C", buttonC);
         } else {
+            buttonC = null;
             redLED = new DigitalOutput(2);
+            addChild("Red LED", greenLED);
         }
+
+        yellowLED = new DigitalOutput(3);
+        addChild("Yellow LED", yellowLED);
     }
 
     /** Gets if the A button is pressed. */

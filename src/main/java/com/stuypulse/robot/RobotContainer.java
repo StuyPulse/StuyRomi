@@ -9,8 +9,9 @@ import com.stuypulse.robot.commands.autos.*;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.Xbox;
+import com.stuypulse.stuylib.input.gamepads.*;
 
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -23,13 +24,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
-    private final Gamepad driver = new Xbox(0);
+    private final Gamepad driver = new AutoGamepad(0);
 
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
     private final OnBoardIO onBoardIO = new OnBoardIO(OnBoardIO.ChannelMode.INPUT, OnBoardIO.ChannelMode.INPUT);
 
     public RobotContainer() {
+        LiveWindow.disableAllTelemetry();
+
         configureDefaultCommands();
         configureButtonBindings();
     }

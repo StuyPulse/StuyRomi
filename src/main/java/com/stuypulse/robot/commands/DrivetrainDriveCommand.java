@@ -17,8 +17,8 @@ public class DrivetrainDriveCommand extends CommandBase {
     private Gamepad driver;
 
     // These filters help smooth out driving but they are also optional
-    private IFilter speedFilter = new LowPassFilter(new SmartNumber("Drivetrain Speed Filter", 0.3));
-    private IFilter turnFilter = new LowPassFilter(new SmartNumber("Drivetrain Turn Filter", 0.2));
+    private IFilter speedFilter = new LowPassFilter(new SmartNumber("Drive Settings/Speed Filter", 0.3));
+    private IFilter turnFilter = new LowPassFilter(new SmartNumber("Drive Settings/Turn Filter", 0.2));
 
     public DrivetrainDriveCommand(Drivetrain subsystem, Gamepad gamepad) {
         drivetrain = subsystem;

@@ -38,7 +38,7 @@ public interface Constants {
 
     interface Drivetrain {
 
-        SmartBoolean USE_GYROSCOPE = new SmartBoolean("Use Gyroscope", false);
+        SmartBoolean USE_GYROSCOPE = new SmartBoolean("Drivetrain/Use Gyroscope", false);
 
         int SENDABLE_SIGFIGS = 5;
 
