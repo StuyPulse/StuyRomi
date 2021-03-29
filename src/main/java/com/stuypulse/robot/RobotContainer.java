@@ -11,8 +11,10 @@ import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 import com.stuypulse.stuylib.input.gamepads.keyboard.SimKeyGamepad;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -25,7 +27,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
-    private final Gamepad driver = new SimKeyGamepad(); // new AutoGamepad(0);
+    private final Gamepad driver = 
+        // new AutoGamepad(0);
+        new SimKeyGamepad(); 
 
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
@@ -45,6 +49,21 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driver.getBottomButton().whileHeld(new DrivetrainSpinCommand(drivetrain));
         driver.getRightButton().whenPressed(new DrivetrainResetCommand(drivetrain));
+
+        // Test command
+        driver.getLeftButton().whileHeld(new DrivetrainGotoCommand(
+            drivetrain, 
+
+            // Target 
+            new SmartNumber("Goto X", 0),
+            new SmartNumber("Goto Y", 0),
+            new SmartNumber("Goto (deg)", 0),
+
+            new TrajectoryConfig(
+                2, // max velocity
+                2  // max acceleration
+            )
+        ));
 
         onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
     }
