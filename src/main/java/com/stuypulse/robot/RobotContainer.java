@@ -10,6 +10,7 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
+import com.stuypulse.stuylib.input.gamepads.keyboard.SimKeyGamepad;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
-    private final Gamepad driver = new AutoGamepad(0);
+    private final Gamepad driver = new SimKeyGamepad(); // new AutoGamepad(0);
 
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
