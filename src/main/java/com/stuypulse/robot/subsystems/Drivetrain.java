@@ -11,12 +11,12 @@ import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,6 +47,8 @@ public class Drivetrain extends SubsystemBase {
         // Setup motors and drivetrain
         leftMotor = new Spark(Ports.LEFT_MOTOR);
         rightMotor = new Spark(Ports.RIGHT_MOTOR);
+
+        rightMotor.setInverted(true);
 
         drivetrain = new DifferentialDrive(leftMotor, rightMotor);
 
@@ -90,12 +92,12 @@ public class Drivetrain extends SubsystemBase {
     public double getLeftVoltage() {
         // We divide by the voltage multiplier here because
         // we multiply by it when setting the motor
-        return (getBatteryVoltage() * leftMotor.get()) / LEFT_VOLTAGE_MUL;
+        return (getBatteryVoltage() * leftMotor.get());
     }
 
     // Gets the last set voltage for right motor
     public double getRightVoltage() {
-        return (getBatteryVoltage() * rightMotor.get()) / RIGHT_VOLTAGE_MUL;
+        return (getBatteryVoltage() * rightMotor.get());
     }
 
     /*********************
@@ -265,8 +267,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        leftMotor.setVoltage(leftVolts * LEFT_VOLTAGE_MUL);
-        rightMotor.setVoltage(rightVolts * RIGHT_VOLTAGE_MUL);
+        leftMotor.setVoltage(leftVolts);
+        rightMotor.setVoltage(rightVolts);
         drivetrain.feed();
     }
 
