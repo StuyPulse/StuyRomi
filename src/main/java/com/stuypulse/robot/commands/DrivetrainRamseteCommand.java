@@ -1,15 +1,12 @@
 package com.stuypulse.robot.commands;
 
-import java.io.IOException;
-
-import com.stuypulse.robot.Constants;
 import com.stuypulse.robot.Constants.Drivetrain.Motion;
+import com.stuypulse.robot.TrajectoryLoader;
 import com.stuypulse.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 /**
@@ -18,19 +15,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
  */
 public final class DrivetrainRamseteCommand extends RamseteCommand {
     
-    // Load Trajectory From File
-    private static Trajectory getTrajectory(String path) {
-        try {
-            return TrajectoryUtil.fromPathweaverJson(
-                Constants.DEPLOY_DIRECTORY.resolve(path)
-            );
-        } catch(IOException e) {
-            System.err.println("Error Opening \"" + path + "\"!");
-            System.out.println(e.getStackTrace());
-            return null;
-        }
-    }
-
     // Information stored by this command
     private boolean resetPosition;
     private Trajectory trajectory;
@@ -58,7 +42,7 @@ public final class DrivetrainRamseteCommand extends RamseteCommand {
 
     // Load from file
     public DrivetrainRamseteCommand(Drivetrain drivetrain, String path) {
-        this( drivetrain, getTrajectory(path) );
+        this( drivetrain, TrajectoryLoader.getTrajectory(path) );
     }
 
     // Reset encoders if required
