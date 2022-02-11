@@ -4,12 +4,15 @@
 
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.*;
-import com.stuypulse.robot.commands.autos.*;
+import com.stuypulse.robot.commands.DrivetrainDriveCommand;
+import com.stuypulse.robot.commands.DrivetrainResetCommand;
+import com.stuypulse.robot.commands.DrivetrainSpinCommand;
+import com.stuypulse.robot.commands.autos.irh.BouncePathAuton;
+import com.stuypulse.robot.commands.autos.rr.DriveDistanceCommand;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.*;
+import com.stuypulse.stuylib.input.gamepads.keyboard.SimKeyGamepad;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
-    private final Gamepad driver = new AutoGamepad(0);
+    private final Gamepad driver = new SimKeyGamepad();
 
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
@@ -43,7 +46,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         driver.getBottomButton().whileHeld(new DrivetrainSpinCommand(drivetrain));
-        driver.getRightButton().whenPressed(new DrivetrainResetCommand(drivetrain));
+        driver.getTopButton().whenPressed(new DrivetrainResetCommand(drivetrain));
+
+        driver.getLeftButton().whenPressed(new DriveDistanceCommand(drivetrain, +1));
+        driver.getRightButton().whenPressed(new DriveDistanceCommand(drivetrain, -1));
 
         onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
     }

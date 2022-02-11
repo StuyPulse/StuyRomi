@@ -22,13 +22,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public interface Constants {
 
-    // This is the scale for units, this is used to make the robot simulate another
-    // size
-    // The romi is about 5 inches across, and edwin is about 30 inches across
-    // By setting the robot scale to 1.0 / 5.0, we can simulate a robot the size of
-    // edwin
-    double ROBOT_SCALE = 1.0 / 5.0;
-
     // for file io
     Path DEPLOY_DIRECTORY = Filesystem.getDeployDirectory().toPath();
 
@@ -42,10 +35,7 @@ public interface Constants {
 
         int SENDABLE_SIGFIGS = 5;
 
-        double LEFT_VOLTAGE_MUL = 1.0;
-        double RIGHT_VOLTAGE_MUL = -1.0;
-
-        double TRACK_WIDTH = 0.141 / ROBOT_SCALE;
+        double TRACK_WIDTH = 0.141;
 
         interface Ports {
             int LEFT_MOTOR = 0;
@@ -69,12 +59,15 @@ public interface Constants {
 
         interface Encoders {
             double COUNTS_PER_REVOLUTION = 1440.0;
-            double WHEEL_DIAMETER_METER = 0.070 / ROBOT_SCALE;
+            double WHEEL_DIAMETER_METER = 0.070;
 
             double DISTANCE_PER_PULSE = (Math.PI * WHEEL_DIAMETER_METER) / COUNTS_PER_REVOLUTION;
         }
 
         interface Motion {
+
+            double MAX_VELOCITY = 0.1;
+            double MAX_ACCELERATION = 0.1;
 
             DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
 
@@ -86,14 +79,14 @@ public interface Constants {
 
             interface FeedForward {
                 double S = 0.376;
-                double V = 10.00 * ROBOT_SCALE;
-                double A = 0.186 * ROBOT_SCALE;
+                double V = 10.00;
+                double A = 0.186;
             }
 
             interface PID {
-                double P = 0.0125 * ROBOT_SCALE;
-                double I = 0 * ROBOT_SCALE;
-                double D = 0 * ROBOT_SCALE;
+                double P = 0.0125;
+                double I = 0;
+                double D = 0;
             }
         }
 
