@@ -4,14 +4,15 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.DriveDistanceCommand;
 import com.stuypulse.robot.commands.DrivetrainDriveCommand;
 import com.stuypulse.robot.commands.DrivetrainResetCommand;
 import com.stuypulse.robot.commands.DrivetrainSpinCommand;
-import com.stuypulse.robot.commands.autos.rr.DriveDistanceCommand;
 import com.stuypulse.robot.commands.autos.rr.OneBallAuton;
 import com.stuypulse.robot.commands.autos.rr.TwoBallAuton;
 import com.stuypulse.robot.commands.autos.rr.ThreeBallAuton;
 import com.stuypulse.robot.commands.autos.rr.FourBallAuton;
+import com.stuypulse.robot.commands.autos.rr.MobilityAuton;
 import com.stuypulse.robot.commands.autos.rr.FiveBallAuton;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
@@ -19,6 +20,8 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.keyboard.SimKeyGamepad;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -37,9 +40,12 @@ public class RobotContainer {
     public final Drivetrain drivetrain = new Drivetrain();
     private final OnBoardIO onBoardIO = new OnBoardIO(OnBoardIO.ChannelMode.INPUT, OnBoardIO.ChannelMode.INPUT);
 
+    private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+
     public RobotContainer() {
         LiveWindow.disableAllTelemetry();
 
+        configureAutons();
         configureDefaultCommands();
         configureButtonBindings();
     }
@@ -54,21 +60,23 @@ public class RobotContainer {
 
         driver.getLeftButton().whenPressed(new DriveDistanceCommand(drivetrain, +1));
         driver.getRightButton().whenPressed(new DriveDistanceCommand(drivetrain, -1));
+    }
 
-        onBoardIO.getButtonA().whenPressed(getAutonomousCommand());
+    private void configureAutons() {
+        autoChooser.setDefaultOption("No Encoders (Moby)", new MobilityAuton.NoEncoders(this));
+        autoChooser.addOption("With Encoders (Moby)", new MobilityAuton.WithEncoders(this));
+        autoChooser.addOption("One Ball", new OneBallAuton(this));
+        autoChooser.addOption("Two Ball", new TwoBallAuton(this));
+        autoChooser.addOption("Three Ball", new ThreeBallAuton(this));
+        autoChooser.addOption("Four Ball", new FourBallAuton(this));
+        autoChooser.addOption("Five Ball", new FiveBallAuton(this));
+
+        SmartDashboard.putData("Auto", autoChooser);
     }
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        return new OneBallAuton(this);
-        
-        //return new TwoBallAuton(this);
-
-        // return new ThreeBallAuto(this);
-
-        // return new FourBallAuto(this);
-
-        // return new FiveBallAuto(this);
+        return autoChooser.getSelected();
     }
 
 }

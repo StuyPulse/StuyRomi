@@ -1,7 +1,6 @@
-package com.stuypulse.robot.commands.autos.rr;
+package com.stuypulse.robot.commands;
 
 import com.stuypulse.robot.TrajectoryLoader;
-import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
 import com.stuypulse.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
