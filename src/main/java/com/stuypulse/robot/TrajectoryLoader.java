@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class TrajectoryLoader {
 
     private static final TrajectoryConfig MAX_SPEED_TRAJECTORY =
-            new TrajectoryConfig(Motion.MAX_VELOCITY, Motion.MAX_ACCELERATION);
+            new TrajectoryConfig(Motion.MAX_VELOCITY, Motion.MAX_ACCELERATION)
+            .setKinematics(Drivetrain.Motion.KINEMATICS);
 
     private static final Trajectory DEFAULT_TRAJECTORY =
             TrajectoryGenerator.generateTrajectory(
@@ -26,6 +27,9 @@ public final class TrajectoryLoader {
                     new Pose2d(1, 0, new Rotation2d()),
                     new TrajectoryConfig(0.1, 0.1)
                             .setKinematics(Drivetrain.Motion.KINEMATICS));
+
+    private TrajectoryLoader() {
+    }
 
     // Function that gets a trajectory from path weaver,
     // but will give a default one if it has an issue
