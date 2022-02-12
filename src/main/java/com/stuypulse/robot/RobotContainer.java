@@ -24,10 +24,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
-    private final Gamepad driver = new AutoGamepad(0);
+    public final Gamepad driver = new AutoGamepad(0);
 
     // The robot's subsystems and commands are defined here...
-    private final Drivetrain drivetrain = new Drivetrain();
+    public final Drivetrain drivetrain = new Drivetrain();
     private final OnBoardIO onBoardIO = new OnBoardIO(OnBoardIO.ChannelMode.INPUT, OnBoardIO.ChannelMode.INPUT);
 
     public RobotContainer() {
@@ -50,14 +50,10 @@ public class RobotContainer {
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        
-        // return new BarrelRacingAuton(drivetrain);
-
-        return new BouncePathAuton(drivetrain);
-        
-        // return new SlalomPathAuton(drivetrain);
-
-        // return new DoNothingAuton();
+        return new TwoBallAuton(new RobotContainer());
+        // return new ThreeBallAuto(new RobotContainer());
+        // return new FourBallAuto(new RobotContainer());
+        // return new FiveBallAuto(new RobotContainer());
     }
 
 }
