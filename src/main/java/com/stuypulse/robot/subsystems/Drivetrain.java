@@ -48,6 +48,8 @@ public class Drivetrain extends SubsystemBase {
         leftMotor = new Spark(Ports.LEFT_MOTOR);
         rightMotor = new Spark(Ports.RIGHT_MOTOR);
 
+        rightMotor.setInverted(true);
+
         drivetrain = new DifferentialDrive(leftMotor, rightMotor);
 
         // Setup encoders
@@ -90,12 +92,12 @@ public class Drivetrain extends SubsystemBase {
     public double getLeftVoltage() {
         // We divide by the voltage multiplier here because
         // we multiply by it when setting the motor
-        return (getBatteryVoltage() * leftMotor.get()) / LEFT_VOLTAGE_MUL;
+        return (getBatteryVoltage() * leftMotor.get());
     }
 
     // Gets the last set voltage for right motor
     public double getRightVoltage() {
-        return (getBatteryVoltage() * rightMotor.get()) / RIGHT_VOLTAGE_MUL;
+        return (getBatteryVoltage() * rightMotor.get());
     }
 
     /*********************
@@ -265,8 +267,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        leftMotor.setVoltage(leftVolts * LEFT_VOLTAGE_MUL);
-        rightMotor.setVoltage(rightVolts * RIGHT_VOLTAGE_MUL);
+        leftMotor.setVoltage(leftVolts);
+        rightMotor.setVoltage(rightVolts);
         drivetrain.feed();
     }
 

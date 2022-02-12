@@ -3,8 +3,9 @@
 /* This work is licensed under the terms of the MIT license.    */
 /****************************************************************/
 
-package com.stuypulse.robot.commands.autos;
+package com.stuypulse.robot.commands.autos.rr;
 
+import com.stuypulse.robot.Constants;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.DrivetrainDriveForeverCommand;
 
@@ -38,7 +39,7 @@ public class TwoBallAuton extends SequentialCommandGroup {
         );
 
         addCommands(
-            new DrivetrainDriveForeverCommand(robot.drivetrain).withTimeout(3),
+            new DriveDistanceCommand(robot.drivetrain, Constants.Drivetrain.TRACK_WIDTH * 4),
             new DrivetrainDriveForeverCommand(robot.drivetrain).withTimeout(DRIVETRAIN_ALIGN_TIME),
             new WaitCommand(DRIVETRAIN_ALIGN_TIME),
             new WaitCommand(CONVEYOR_TO_SHOOTER)

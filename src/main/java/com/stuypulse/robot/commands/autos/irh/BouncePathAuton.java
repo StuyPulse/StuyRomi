@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.autos;
+package com.stuypulse.robot.commands.autos.irh;
 
 import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
 import com.stuypulse.robot.subsystems.Drivetrain;

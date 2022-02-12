@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.    */
 /****************************************************************/
 
-package com.stuypulse.robot.commands.autos;
+package com.stuypulse.robot.commands.autos.rr;
 
 import com.stuypulse.robot.commands.DrivetrainRamseteCommand;
 import com.stuypulse.robot.RobotContainer;

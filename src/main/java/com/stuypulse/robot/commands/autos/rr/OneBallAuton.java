@@ -1,5 +1,6 @@
-package com.stuypulse.robot.commands.autos;
+package com.stuypulse.robot.commands.autos.rr;
 
+import com.stuypulse.robot.Constants;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.DrivetrainDriveForeverCommand;
 
@@ -32,7 +33,7 @@ public class OneBallAuton extends SequentialCommandGroup {
                 new WaitCommand(SHOOTER_INITIALIZE_DELAY + 1) // Add 1 second for starting up intake
         );
         addCommands(
-                new DrivetrainDriveForeverCommand(robot.drivetrain).withTimeout(2), // 2 seconds for testing
+                new DriveDistanceCommand(robot.drivetrain, Constants.Drivetrain.TRACK_WIDTH * 4),
                 new DrivetrainDriveForeverCommand(robot.drivetrain).withTimeout(DRIVETRAIN_ALIGN_TIME),
                 new WaitCommand(CONVEYOR_TO_SHOOTER)
         );
