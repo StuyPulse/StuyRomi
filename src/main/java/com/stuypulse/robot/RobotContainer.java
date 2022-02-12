@@ -50,9 +50,14 @@ public class RobotContainer {
 
     // Autonomous Commands
     public Command getAutonomousCommand() {
-        return new TwoBallAuton(new RobotContainer());
+        return new OneBallAuton(new RobotContainer());
+        
+        //return new TwoBallAuton(new RobotContainer());
+
         // return new ThreeBallAuto(new RobotContainer());
+
         // return new FourBallAuto(new RobotContainer());
+
         // return new FiveBallAuto(new RobotContainer());
     }
 
