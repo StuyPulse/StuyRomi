@@ -1,0 +1,25 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "RomiGyro": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Drivetrain": "Subsystem",
+      "/LiveWindow/Drivetrain/Differential Drive": "DifferentialDrive",
+      "/LiveWindow/OnBoardIO": "Subsystem",
+      "/LiveWindow/OnBoardIO/Button A": "Digital Input",
+      "/LiveWindow/OnBoardIO/Button B": "Digital Input",
+      "/LiveWindow/OnBoardIO/Button C": "Digital Input",
+      "/LiveWindow/OnBoardIO/Yellow LED": "Digital Output",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Drivetrain/Field": "Field2d"
+    }
+  }
+}
