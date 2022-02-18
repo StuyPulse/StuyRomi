@@ -19,7 +19,7 @@ public class FiveBallBlayAuton extends SequentialCommandGroup {
     // Time it takes for the conveyor to give the shooter the ball
     private static final double CONVEYOR_TO_SHOOTER = 1.0;
     // Time we want to give the drivetrain to align
-    private static final double DRIVETRAIN_ALIGN_TIME = 3.0;
+    private static final double DRIVETRAIN_ALIGN_TIME = 1.0;
 
     private static final double HUMAN_WAIT_TIME = 3.0;
 
