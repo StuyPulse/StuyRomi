@@ -14,6 +14,7 @@ import com.stuypulse.robot.commands.autos.rr.ThreeBallAuton;
 import com.stuypulse.robot.commands.autos.rr.FourBallAuton;
 import com.stuypulse.robot.commands.autos.rr.MobilityAuton;
 import com.stuypulse.robot.commands.autos.rr.FiveBallAuton;
+import com.stuypulse.robot.commands.autos.rr.FiveBallBlayAuton;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -63,18 +64,19 @@ public class RobotContainer {
     }
 
     private void configureAutons() {
-        autoChooser.setDefaultOption("No Encoders (Moby)", new MobilityAuton.NoEncoders(this));
-        autoChooser.addOption("With Encoders (Moby)", new MobilityAuton.WithEncoders(this));
+        autoChooser.setDefaultOption("No Encoders (Moby Dick)", new MobilityAuton.NoEncoders(this));
+        autoChooser.addOption("With Encoders (Moby Dick)", new MobilityAuton.WithEncoders(this));
         autoChooser.addOption("One Ball", new OneBallAuton(this));
         autoChooser.addOption("Two Ball", new TwoBallAuton(this));
         autoChooser.addOption("Three Ball", new ThreeBallAuton(this));
         autoChooser.addOption("Four Ball", new FourBallAuton(this));
         autoChooser.addOption("Five Ball", new FiveBallAuton(this));
+        autoChooser.addOption("FIve Ball Blay Auton", new FiveBallBlayAuton(this));
 
         SmartDashboard.putData("Auto", autoChooser);
     }
 
-    // Autonomous Commands
+    // Autonomous Commands]
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
