@@ -8,12 +8,13 @@ import com.stuypulse.robot.commands.DriveDistanceCommand;
 import com.stuypulse.robot.commands.DrivetrainDriveCommand;
 import com.stuypulse.robot.commands.DrivetrainResetCommand;
 import com.stuypulse.robot.commands.DrivetrainSpinCommand;
-import com.stuypulse.robot.commands.autos.rr.OneBallAuton;
-import com.stuypulse.robot.commands.autos.rr.TwoBallAuton;
-import com.stuypulse.robot.commands.autos.rr.ThreeBallAuton;
+import com.stuypulse.robot.commands.RecordGamepadCommand;
+import com.stuypulse.robot.commands.autos.rr.FiveBallAuton;
 import com.stuypulse.robot.commands.autos.rr.FourBallAuton;
 import com.stuypulse.robot.commands.autos.rr.MobilityAuton;
-import com.stuypulse.robot.commands.autos.rr.FiveBallAuton;
+import com.stuypulse.robot.commands.autos.rr.OneBallAuton;
+import com.stuypulse.robot.commands.autos.rr.ThreeBallAuton;
+import com.stuypulse.robot.commands.autos.rr.TwoBallAuton;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.OnBoardIO;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,7 +37,7 @@ public class RobotContainer {
 
     // Assumes a gamepad plugged into channnel 0
     private final Gamepad driver = new SimKeyGamepad();
-
+ 
     // The robot's subsystems and commands are defined here...
     public final Drivetrain drivetrain = new Drivetrain();
     private final OnBoardIO onBoardIO = new OnBoardIO(OnBoardIO.ChannelMode.INPUT, OnBoardIO.ChannelMode.INPUT);
@@ -51,7 +53,12 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        drivetrain.setDefaultCommand(new DrivetrainDriveCommand(drivetrain, driver));
+        drivetrain.setDefaultCommand(
+            new ParallelCommandGroup(
+                new RecordGamepadCommand(driver),
+                new DrivetrainDriveCommand(drivetrain, driver)
+            )
+        );
     }
 
     private void configureButtonBindings() {

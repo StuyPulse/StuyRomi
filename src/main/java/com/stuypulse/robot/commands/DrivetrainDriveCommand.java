@@ -29,14 +29,22 @@ public class DrivetrainDriveCommand extends CommandBase {
         addRequirements(subsystem);
     }
 
+    public double getSpeed() {
+        return driver.getRightTrigger() - driver.getLeftTrigger();
+    }
+
+    public double getTurn() {
+        return driver.getLeftX();
+    }
+
     // Called 50 times a second if the robot is running
     @Override
     public void execute() {
         // Get the speed from the triggers
-        double speed = driver.getRightTrigger() - driver.getLeftTrigger();
+        double speed = getSpeed(); 
 
         // Get the turn value from the left stick
-        double turn = driver.getLeftX();
+        double turn = getTurn(); // driver.getLeftX();
 
         // Filter the Speed and Turn value
         // This is optional, but it leads to a smoother driving experience.
