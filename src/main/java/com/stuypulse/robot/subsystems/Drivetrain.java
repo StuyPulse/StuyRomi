@@ -5,7 +5,6 @@
 package com.stuypulse.robot.subsystems;
 
 import static com.stuypulse.robot.Constants.Drivetrain.*;
-import com.stuypulse.robot.subsystems.sensors.RomiGyro;
 
 import com.stuypulse.stuylib.math.Angle;
 
@@ -20,6 +19,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.romi.RomiGyro;
+
 
 public class Drivetrain extends SubsystemBase {
 
@@ -33,7 +34,7 @@ public class Drivetrain extends SubsystemBase {
     private final Encoder leftEncoder;
     private final Encoder rightEncoder;
 
-    // Sensors
+    // Gyro
     private final RomiGyro gyro;
 
     // Odemetery
