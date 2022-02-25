@@ -1,7 +1,8 @@
-// import edu.wpi.first.gradlerio.deploy.roborio.RoboRIO
+import edu.wpi.first.gradlerio.deploy.roborio.RoboRIO
+
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2022.1.1"
+    id "edu.wpi.first.GradleRIO" version "2022.3.1"
 }
 
 allprojects {
@@ -73,7 +74,9 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    implementation file()
+    implementation files('../StuyLib/build/libs/StuyLib-1.0.0.jar')
+    // implementation file('../StuyLib/build/libs/StuyLib-1.0.0.jar')
+    implementation 'com.google.code.gson:gson:2.9.0'
     // implementation "com.github.StuyPulse:StuyLib:${STUYLIB_VERSION}";
 }
 

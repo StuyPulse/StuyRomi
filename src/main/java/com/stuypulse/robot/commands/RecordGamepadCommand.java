@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// import com.google.gson.Gson;
+import com.google.gson.Gson;
 
 import com.stuypulse.robot.Constants;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -48,7 +48,7 @@ public class RecordGamepadCommand extends CommandBase {
     public void end(boolean interrupted) {
         try {
             FileWriter writer = new FileWriter(getOutputFile());
-            // new Gson().toJson(states, writer);
+            new Gson().toJson(states, writer);
         } catch (IOException e) {
             DriverStation.reportWarning("didn't save gamepad states", false);
         }
