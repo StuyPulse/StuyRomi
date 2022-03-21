@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.DrivetrainResetCommand;
 import com.stuypulse.robot.commands.DrivetrainSpinCommand;
 import com.stuypulse.robot.commands.autos.rr.OneBallAuton;
 import com.stuypulse.robot.commands.autos.rr.TwoBallAuton;
+import com.stuypulse.robot.commands.autos.rr.TwoBallTwoMeanAuton;
 import com.stuypulse.robot.commands.autos.rr.ThreeBallAuton;
 import com.stuypulse.robot.commands.autos.rr.FourBallAuton;
 import com.stuypulse.robot.commands.autos.rr.MobilityAuton;
@@ -72,6 +73,7 @@ public class RobotContainer {
         autoChooser.addOption("Four Ball", new FourBallAuton(this));
         autoChooser.addOption("Five Ball", new FiveBallAuton(this));
         autoChooser.addOption("FIve Ball Blay Auton", new FiveBallBlayAuton(this));
+        autoChooser.addOption("Two Ball Mean Auton", new TwoBallTwoMeanAuton(this));
 
         SmartDashboard.putData("Auto", autoChooser);
     }

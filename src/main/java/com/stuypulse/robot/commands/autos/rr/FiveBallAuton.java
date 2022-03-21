@@ -73,6 +73,7 @@ public class FiveBallAuton extends SequentialCommandGroup {
         addCommands(
                 new DrivetrainRamseteCommand(robot.drivetrain, FIVE_BALL_SHOOT_WALL_BALL).fieldRelative(),
                 new WaitCommand(DRIVETRAIN_ALIGN_TIME),
+                
                 new WaitCommand(CONVEYOR_TO_SHOOTER)
         );
     }
