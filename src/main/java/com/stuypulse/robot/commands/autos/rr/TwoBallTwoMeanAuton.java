@@ -30,15 +30,16 @@ public class TwoBallTwoMeanAuton extends SequentialCommandGroup {
     // Time it takes for the conveyor to give the shooter the ball
     private static final double CONVEYOR_TO_SHOOTER = 1.0;
     // Time we want to give the drivetrain to align
-    private static final double DRIVETRAIN_ALIGN_TIME = 4.0;
+    private static final double DRIVETRAIN_ALIGN_TIME = 2.0;
 
-    private static final String TWO_BALL_TO_SECOND_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetSecondBall.wpilib.json";
+        private static final String TWO_BALL_TO_SECOND_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetSecondBall.wpilib.json";
     private static final String TWO_BALL_GET_OTHER_OPPONENT_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetOtherOpponentBall.wpilib.json";
-    private static final String TWO_BALL_GET_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetWallBall.wpilib.json";
-    private static final String TWO_BALL_EJECT_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallEjectWallBall.wpilib.json";
-    private static final String TWO_BALL_WALL_BALL_INVERSE = "TwoBallTwoMeanAuton/output/TwoBallWallBallInverse.wpilib.json";
-    private static final String TWO_BALL_TO_TELEOP_STARTING_POSITION = "TwoBallTwoMeanAuton/output/TwoBallTeleopStart.wpilib.json";
-
+//     private static final String TWO_BALL_GET_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetWallBall.wpilib.json";
+//     private static final String TWO_BALL_EJECT_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallEjectWallBall.wpilib.json";
+//     private static final String TWO_BALL_WALL_BALL_INVERSE = "TwoBallTwoMeanAuton/output/TwoBallEjectWallBallInverse.wpilib.json";
+        private static final String TWO_BALL_TO_WALL = "TwoBallTwoMeanAuton/output/TwoBallToWall.wpilib.json";
+        private static final String TWO_BALL_TO_WALL_INVERSE = "TwoBallTwoMeanAuton/output/TwoBallToWallInverse.wpilib.json";
+ 
 
     public TwoBallTwoMeanAuton(RobotContainer robot) {
 
@@ -56,16 +57,13 @@ public class TwoBallTwoMeanAuton extends SequentialCommandGroup {
                         .fieldRelative()
                 );
         addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_GET_WALL_BALL)
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_TO_WALL)
                         .fieldRelative()
          );
-        addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_EJECT_WALL_BALL)
-                        .fieldRelative(),
-                new WaitCommand(1));
 
         addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_WALL_BALL_INVERSE)
-                        .fieldRelative());
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_TO_WALL_INVERSE)
+                        .fieldRelative()
+        );
     }
 }
