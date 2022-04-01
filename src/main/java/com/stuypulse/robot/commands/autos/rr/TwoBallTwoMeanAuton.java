@@ -32,14 +32,14 @@ public class TwoBallTwoMeanAuton extends SequentialCommandGroup {
     // Time we want to give the drivetrain to align
     private static final double DRIVETRAIN_ALIGN_TIME = 2.0;
 
-        private static final String TWO_BALL_TO_SECOND_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetSecondBall.wpilib.json";
-    private static final String TWO_BALL_GET_OTHER_OPPONENT_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetOtherOpponentBall.wpilib.json";
+        private static final String TWO_BALL_GET_SECOND_BALL = "TwoBallMeanAuton/output/TwoBallGetSecondBall.wpilib.json";
+    private static final String TWO_BALL_GET_OTHER_OPPONENT_BALL = "TwoBallMeanAuton/output/TwoBallGetOtherOpponentBall.wpilib.json";
 //     private static final String TWO_BALL_GET_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallGetWallBall.wpilib.json";
 //     private static final String TWO_BALL_EJECT_WALL_BALL = "TwoBallTwoMeanAuton/output/TwoBallEjectWallBall.wpilib.json";
 //     private static final String TWO_BALL_WALL_BALL_INVERSE = "TwoBallTwoMeanAuton/output/TwoBallEjectWallBallInverse.wpilib.json";
-        private static final String TWO_BALL_TO_WALL = "TwoBallTwoMeanAuton/output/TwoBallToWall.wpilib.json";
-        private static final String TWO_BALL_TO_WALL_INVERSE = "TwoBallTwoMeanAuton/output/TwoBallToWallInverse.wpilib.json";
- 
+        private static final String TWO_BALL_GET_WALL_BALL = "TwoBallMeanAuton/output/TwoBallGetWallBall.wpilib.json";
+        private static final String TWO_BALL_EJECT_WALL_BALL = "TwoBallMeanAuton/output/TwoBallEjectWallBall.wpilib.json";
+        private static final String TWO_BALL_WALL_BALL_INVERSE = "TwoBallMeanAuton/output/TwoBallEjectWallBallInverse.wpilib.json";
 
     public TwoBallTwoMeanAuton(RobotContainer robot) {
 
@@ -48,7 +48,7 @@ public class TwoBallTwoMeanAuton extends SequentialCommandGroup {
             new WaitCommand(SHOOTER_INITIALIZE_DELAY));
         // Shoot Two Balls
         addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_TO_SECOND_BALL)
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_GET_SECOND_BALL)
                         .robotRelative(),
                 new WaitCommand( DRIVETRAIN_ALIGN_TIME));
         // Get opponent Ball
@@ -57,12 +57,16 @@ public class TwoBallTwoMeanAuton extends SequentialCommandGroup {
                         .fieldRelative()
                 );
         addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_TO_WALL)
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_GET_WALL_BALL)
                         .fieldRelative()
          );
 
         addCommands(
-                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_TO_WALL_INVERSE)
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_EJECT_WALL_BALL)
+                        .fieldRelative()
+        );
+        addCommands(
+                new DrivetrainRamseteCommand(robot.drivetrain, TWO_BALL_WALL_BALL_INVERSE)
                         .fieldRelative()
         );
     }
